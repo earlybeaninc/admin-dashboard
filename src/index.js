@@ -2,7 +2,6 @@
 import 'simplebar/src/simplebar.css';
 
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 
 //
@@ -18,9 +17,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <HelmetProvider>
-    <BrowserRouter>
-      <App store={store} persistor={persistor} />
-    </BrowserRouter>
+    <App store={store} persistor={persistor} />
   </HelmetProvider>
 );
 

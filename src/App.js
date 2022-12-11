@@ -3,10 +3,10 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import PropType from 'prop-types';
 
-import Router from './routes';
 import ThemeProvider from './theme';
 import ScrollToTop from './components/ScrollToTop';
 import { BaseOptionChartStyle } from './components/chart/BaseOptionChart';
+import AppRouter from './routers/AppRouter';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ function App({ store, persistor }) {
           <ThemeProvider>
             <ScrollToTop />
             <BaseOptionChartStyle />
-            <Router />
+            <AppRouter />
           </ThemeProvider>
         </PersistGate>
       </Provider>

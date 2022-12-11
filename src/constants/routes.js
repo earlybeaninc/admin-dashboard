@@ -8,3 +8,6 @@ export const SIGNUP = '/signup';
 
 /* Admin routes */
 export const ADMIN_DASHBOARD = '/admin';
+
+/* Static routes */
+export const PAGE404 = '/404';

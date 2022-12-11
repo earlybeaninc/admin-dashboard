@@ -2,11 +2,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Outlet } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import PropType from 'prop-types';
 import { styled } from '@mui/material/styles';
 
+import * as ROUTES from '../constants/routes';
 import { DashboardNavbar, DashboardSidebar } from '../layouts';
 
 // ----------------------------------------------------------------------
@@ -62,15 +63,7 @@ const AdminRoute = ({ isAuth, userType, component: Component }) => {
   }
 
   return (
-    <>
-      <RootStyle>
-        <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
-        <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
-        <MainStyle>
-          <Outlet />
-        </MainStyle>
-      </RootStyle>
-    </>
+    <Navigate to={ROUTES.SIGNIN} />
   );
   
 }
