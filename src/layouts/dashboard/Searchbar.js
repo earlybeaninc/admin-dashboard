@@ -32,7 +32,7 @@ const SearchbarStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Searchbar() {
+const Searchbar = () => {
   const [isOpen, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -74,4 +74,6 @@ export default function Searchbar() {
       </div>
     </ClickAwayListener>
   );
-}
+};
+
+export default Searchbar;

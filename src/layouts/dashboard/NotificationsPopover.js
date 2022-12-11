@@ -76,7 +76,7 @@ const NOTIFICATIONS = [
   },
 ];
 
-export default function NotificationsPopover() {
+const NotificationsPopover = () => {
   const anchorRef = useRef(null);
 
   const [notifications, setNotifications] = useState(NOTIFICATIONS);
@@ -272,4 +272,6 @@ function renderContent(notification) {
     avatar: notification.avatar ? <img alt={notification.title} src={notification.avatar} /> : null,
     title,
   };
-}
+};
+
+export default NotificationsPopover;

@@ -36,12 +36,7 @@ const AccountStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-DashboardSidebar.propTypes = {
-  isOpenSidebar: PropTypes.bool,
-  onCloseSidebar: PropTypes.func,
-};
-
-export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
+const DashboardSidebar = ({ isOpenSidebar, onCloseSidebar }) => {
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');
@@ -140,4 +135,11 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       )}
     </RootStyle>
   );
-}
+};
+
+DashboardSidebar.propTypes = {
+  isOpenSidebar: PropTypes.bool,
+  onCloseSidebar: PropTypes.func
+};
+
+export default DashboardSidebar;

@@ -7,17 +7,19 @@ import { HelmetProvider } from 'react-helmet-async';
 
 //
 import App from './App';
+import configureStore from './redux/store/store';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 
 // ----------------------------------------------------------------------
 
+const { store, persistor } = configureStore();
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <HelmetProvider>
     <BrowserRouter>
-      <App />
+      <App store={store} persistor={persistor} />
     </BrowserRouter>
   </HelmetProvider>
 );

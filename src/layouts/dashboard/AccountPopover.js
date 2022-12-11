@@ -30,7 +30,7 @@ const MENU_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function AccountPopover() {
+const AccountPopover = () => {
   const anchorRef = useRef(null);
 
   const [open, setOpen] = useState(null);
@@ -108,3 +108,5 @@ export default function AccountPopover() {
     </>
   );
 }
+
+export default AccountPopover;

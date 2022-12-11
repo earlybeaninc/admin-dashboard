@@ -27,7 +27,7 @@ const LANGS = [
 
 // ----------------------------------------------------------------------
 
-export default function LanguagePopover() {
+const LanguagePopover = () => {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -79,4 +79,6 @@ export default function LanguagePopover() {
       </MenuPopover>
     </>
   );
-}
+};
+
+export default LanguagePopover;
