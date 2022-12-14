@@ -1,6 +1,6 @@
 /** Auth */
-export { default as Register } from './Register';
-export { default as Login } from './Login';
+export { default as Register } from './auth/Register';
+export { default as Login } from './auth/Login';
 /** Admin */
 export { default as DashboardApp} from './DashboardApp';
 export { default as User} from './User';

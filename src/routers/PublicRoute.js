@@ -18,12 +18,12 @@ import { useDidMount } from '../hooks';
  * 
  */
 
-const PublicRoute = ({ isAuth, userType, isActive, component: Component, path }) => { // eslint-disable-line
+const PublicRoute = ({ isAuth, isEmailVerified, component: Component, path }) => { // eslint-disable-line
   
   const location = useLocation();
   const didMount = useDidMount(true);
 
-  if (isAuth && userType === 'admin' && isActive) {
+  if (isAuth && isEmailVerified) {
     if (didMount) {
       return <Navigate to={ADMIN_DASHBOARD} replace state={{ location }} />;
     }
@@ -38,23 +38,20 @@ const PublicRoute = ({ isAuth, userType, isActive, component: Component, path })
 
 PublicRoute.defaultProps = {
   isAuth: false,
-  userType: 'user',
-  isActive: false,
+  isEmailVerified: '',
   path: '/'
 };
 
 PublicRoute.propTypes = {
   isAuth: PropType.bool,
-  userType: PropType.string,
-  isActive: PropType.bool,
+  isEmailVerified: PropType.string,
   component: PropType.func.isRequired,
   path: PropType.string
 };
 
-const mapStateToProps = ({ auth }) => ({
+const mapStateToProps = ({ auth, profile }) => ({
   isAuth: !!auth,
-  userType: auth?.user_type || '',
-  isActive: auth?.is_active || false
+  isEmailVerified: profile?.email_verified_at || ''
 });
 
 export default connect(mapStateToProps)(PublicRoute);

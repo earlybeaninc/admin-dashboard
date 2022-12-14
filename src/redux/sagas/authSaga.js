@@ -14,11 +14,9 @@ function* handleError(e) {
   const obj = { success: false, type: 'auth', isError: true };
   yield put(setAuthenticating(false));
 
-  switch (e.code) {
-    default:
-      yield put(setAuthStatus({ ...obj, message: e.message }));
-      break;
-  }
+  if (e.errors) {
+    yield put(setAuthStatus({ ...obj, status: 'error', message: e.message }));
+  }      
 }
 
 function* initRequest() {
@@ -33,42 +31,20 @@ function* authSaga({ type, payload }) {
         yield initRequest();
 
         const auth = {
-          email: payload.email,
-          password: payload.password
+          password: payload.password,
+          email: payload.email
         };
-        const authUser = yield call(ADMIN_API.signIn, auth);
-        const userSnapshot = yield call(ADMIN_API.getAuthenticatedUser, {token: authUser.access_token});
-        if (userSnapshot) { 
-          const user = userSnapshot;
-          localStorage.setItem('user', JSON.stringify(user));
-          localStorage.setItem('authTokens', JSON.stringify(authUser));
-
-          yield put(setProfile(user, authUser));
-
-          yield put(signInSuccess({
-            id: userSnapshot.id,
-            user_type: userSnapshot.user_type,
-            is_active: userSnapshot.is_active,
-            provider: userSnapshot.provider
-          }));
-  
-          yield put(setAuthStatus({
-            success: true,
-            type: 'auth',
-            isError: false,
-            message: 'Successfully signed in. Redirecting...'
-          }));
-        }
+        yield call(ADMIN_API.signIn, auth);
+        // TODO: Redirect...
 
       } catch (e) {
-        console.log(e)
         yield put(setAuthenticating(false));
         yield put(setAuthStatus({ 
           success: false, 
           type: 'auth', 
           isError: true, 
-          status: 'error', 
-          message: 'Incorrect email or password' 
+          status: e.status, 
+          message: e.message 
         }));
       }
       break;
@@ -77,42 +53,25 @@ function* authSaga({ type, payload }) {
       try {
         yield initRequest();
         const user = {
-            first_name: payload.first_name,
-            last_name: payload.last_name,
-            email: payload.email,
-            password: payload.password,
-            gender: payload.gender,
-            user_type: 'admin',
-            is_active: payload.is_active
-          };
-        
-        const auth = {
+          first_name: payload.first_name,
+          last_name: payload.last_name,
           email: payload.email,
-          password: payload.password
+          password: payload.password,
+          gender: payload.gender,
+          phone: payload.phone,
+          dob: payload.dob
         };
-        const refUser = yield call(ADMIN_API.signUp, user);
-        const authToken = yield call(ADMIN_API.signIn, auth);
-        localStorage.setItem('user', JSON.stringify(refUser));
-        localStorage.setItem('authTokens', JSON.stringify(authToken));
-
-        yield put(setProfile(refUser, authToken));
-
-        yield put(signInSuccess({
-          id: refUser.id,
-          user_type: user.user_type,
-          is_active: user.is_active,          
-          provider: user.provider
-        }));
-
+        yield call(ADMIN_API.signUp, user);
         yield put(setAuthStatus({
           success: true,
           type: 'auth',
           isError: false,
-          message: 'Successfully signed up. Redirecting...'
+          message: 'Admin registration successful. Please check your email for a 6-digit code in to verify your email'
         }));
 
         yield put(setAuthenticating(false));
       } catch (e) {
+        console.log(e)
         yield handleError(e);
       }
     break;
@@ -126,10 +85,7 @@ function* authSaga({ type, payload }) {
 
         yield put(setProfile(user, authTokens));
         yield put(signInSuccess({
-          id: payload.id,
-          user_type: user.user_type,
-          is_active: user.is_active,
-          provider: user.provider
+          id: payload.id
         }));
       }
 

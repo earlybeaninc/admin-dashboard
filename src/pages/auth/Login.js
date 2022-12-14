@@ -3,13 +3,16 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Card, Link, Container, Typography } from '@mui/material';
 // hooks
-import useResponsive from '../hooks/useResponsive';
+import useResponsive from '../../hooks/useResponsive';
 // components
-import Page from '../components/Page';
-import Logo from '../components/Logo';
+import Page from '../../components/Page';
+import Logo from '../../components/Logo';
 // sections
-import { RegisterForm } from '../sections/auth/register';
-import AuthSocial from '../sections/auth/AuthSocial';
+import { LoginForm } from '../../sections/auth/login';
+import AuthSocial from '../../sections/auth/AuthSocial';
+// routes
+import * as ROUTES from '../../constants/routes';
+
 
 // ----------------------------------------------------------------------
 
@@ -56,21 +59,22 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Register() {
+export default function Login() {
   const smUp = useResponsive('up', 'sm');
 
   const mdUp = useResponsive('up', 'md');
 
   return (
-    <Page title="Register">
+    <Page title="Login">
       <RootStyle>
         <HeaderStyle>
           <Logo />
+
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }}>
-              Already have an account? {''}
-              <Link variant="subtitle2" component={RouterLink} to="/login">
-                Login
+              Don’t have an account? {''}
+              <Link variant="subtitle2" component={RouterLink} to={ROUTES.SIGNUP}>
+                Get started
               </Link>
             </Typography>
           )}
@@ -79,41 +83,29 @@ export default function Register() {
         {mdUp && (
           <SectionStyle>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Manage the job more effectively with Minimal
+              Hi, Welcome Back
             </Typography>
-            <img alt="register" src="/static/illustrations/illustration_register.png" />
+            <img src="/static/illustrations/illustration_login.png" alt="login" />
           </SectionStyle>
         )}
 
-        <Container>
+        <Container maxWidth="sm">
           <ContentStyle>
             <Typography variant="h4" gutterBottom>
-              Get started absolutely free.
+              Sign in to Minimal
             </Typography>
 
-            <Typography sx={{ color: 'text.secondary', mb: 5 }}>Free forever. No credit card needed.</Typography>
+            <Typography sx={{ color: 'text.secondary', mb: 5 }}>Enter your details below.</Typography>
 
             <AuthSocial />
 
-            <RegisterForm />
-
-            <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-              By registering, I agree to Minimal&nbsp;
-              <Link underline="always" color="text.primary" href="#">
-                Terms of Service
-              </Link>
-              {''}and{''}
-              <Link underline="always" color="text.primary" href="#">
-                Privacy Policy
-              </Link>
-              .
-            </Typography>
+            <LoginForm />
 
             {!smUp && (
-              <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-                Already have an account?{' '}
-                <Link variant="subtitle2" to="/login" component={RouterLink}>
-                  Login
+              <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+                Don’t have an account?{' '}
+                <Link variant="subtitle2" component={RouterLink} to={ROUTES.SIGNUP}>
+                  Get started
                 </Link>
               </Typography>
             )}

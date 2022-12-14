@@ -40,15 +40,15 @@ const MainStyle = styled('div')(({ theme }) => ({
  * Authentication guard for routes
  * 
  * @param {PropTypes.bool} isAuth element/bool
- * @param {PropTypes.string} user_type element/string
+ * @param {PropTypes.string} isEmailVerified element/string
  * @param {PropTypes.func} component element/func
  * 
  */
 
-const AdminRoute = ({ isAuth, userType, component: Component }) => {
+const AdminRoute = ({ isAuth, isEmailVerified, component: Component }) => {
   const [open, setOpen] = useState(false);
 
-	if(isAuth && userType === 'admin') {
+	if(isAuth && isEmailVerified) {
     return (
       <>
         <RootStyle>
@@ -70,18 +70,18 @@ const AdminRoute = ({ isAuth, userType, component: Component }) => {
 
 AdminRoute.defaultProps = {
   isAuth: false,
-  userType: 'admin'
+  isEmailVerified: ''
 };
 
 AdminRoute.propTypes = {
   isAuth: PropType.bool,
-  userType: PropType.string,
+  isEmailVerified: PropType.string,
   component: PropType.func.isRequired
 };
 
-const mapStateToProps = ({ auth }) => ({
+const mapStateToProps = ({ auth, profile }) => ({
   isAuth: !!auth,
-  userType: auth?.user_type || ''
+  isEmailVerified: profile?.email_verified_at || ''
 });
 
 export default connect(mapStateToProps)(AdminRoute);

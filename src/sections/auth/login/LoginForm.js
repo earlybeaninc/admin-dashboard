@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,17 +11,27 @@ import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
+import { setAuthenticating, setAuthStatus } from '../../../redux/actions/miscActions';
+import { signIn } from '../../../redux/actions/authActions';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
-  const navigate = useNavigate();
+  const { isAuthenticating, authStatus } = useSelector((state) => ({
+      isAuthenticating: state.app.isAuthenticating,
+      authStatus: state.app.authStatus
+  }));
 
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    email: Yup.string()
+      .email('Email is not valid.')
+      .required('Email is required.'),
+    password: Yup.string()
+      .required('Password is required.')
   });
 
   const defaultValues = {
@@ -33,14 +44,21 @@ export default function LoginForm() {
     resolver: yupResolver(LoginSchema),
     defaultValues,
   });
+  const { handleSubmit } = methods;
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+  useEffect(() => {
+      dispatch(setAuthStatus(null));
+      dispatch(setAuthenticating(false));
+  }, [dispatch]);
 
-  const onSubmit = async () => {
-    navigate('/dashboard', { replace: true });
+  useEffect(() => {
+    if (authStatus?.message && !isAuthenticating) {
+      enqueueSnackbar(authStatus.message, { variant: authStatus.status })
+    }
+}, [enqueueSnackbar, authStatus, isAuthenticating]);
+
+  const onSubmit = (form) => {
+      dispatch(signIn(form.email, form.password));
   };
 
   return (
@@ -71,7 +89,7 @@ export default function LoginForm() {
         </Link>
       </Stack>
 
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isAuthenticating}>
         Login
       </LoadingButton>
     </FormProvider>

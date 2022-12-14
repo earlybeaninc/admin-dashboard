@@ -12,7 +12,7 @@ export function url(uri, queryParams, routeApi) {
 export function get(url, kwargs = {}) {
 	const { token, ...options } = kwargs
 	const defaults = {
-		// credentials: 'include',
+		withCredentials: true,
 		headers: Object.assign({ // eslint-disable-line
 		'Accept': 'application/json',
 		'Content-Type': 'application/json'
@@ -25,11 +25,11 @@ export function get(url, kwargs = {}) {
 export function post(url, data, kwargs = {}) {
 	const { token, ...options } = kwargs
 	const defaults = {
-		// credentials: 'include',
+		withCredentials: true,
 		headers: Object.assign({ // eslint-disable-line
 		'Accept': 'application/json',
 		'Content-Type': 'application/json',
-		'X-CSRFToken': Cookies.get('csrf_token')
+		'X-CSRF-Token': Cookies.get('csrf_token')
 		}, token ? { 'Authorization': `Bearer ${token}` } : {}),
 		method: 'POST',
 		body: JSON.stringify(data)
@@ -51,12 +51,14 @@ export function post(url, data, kwargs = {}) {
 	const { ...options } = kwargs
 	const encodedString = Buffer.from(`${data.email}:${data.password}`).toString('base64');
 	const defaults = {
+		withCredentials: true,
 		headers: Object.assign({ // eslint-disable-line
 		'Accept': 'application/json',
 		'Content-Type': 'application/json',
 		'Authorization': `Basic ${encodedString}`
 		}),
-		method: 'POST'
+		method: 'POST',
+		body: JSON.stringify(data)
 	}
 	return request(url, _mergeOptions(defaults, options))
   }
@@ -83,14 +85,14 @@ export const request = async (url, options) => {
 		.then(_checkStatusAndParseJSON)
 		.catch((e) => {
 		return new Promise((_, reject) => {
-			if (e.response) {
+			if (e) {
 				reject(e)
 			} else {
 				// should only end up here if the flask application has gone away
 				e.response = {
 					status: -1,
 					statusText: e.message,
-					error: e.message
+					error: e.errors
 				}
 				reject(e)
 			}
@@ -106,8 +108,8 @@ function _checkStatusAndParseJSON(response) {
 				// success response with json body
 				resolve(json)
 			} else {
-				// error response with json error message
-				reject(json.messages)
+				// error response with json error
+				reject(json)
 			}
 		})
 		// response with no body (response.json() raises SyntaxError)

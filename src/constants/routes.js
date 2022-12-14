@@ -1,5 +1,5 @@
 /* API routes */
-export const USER_API = process.env.REACT_APP_USER_API;
+export const ADMIN_API = process.env.REACT_APP_ADMIN_API;
 
 /* Auth routes */
 export const SIGNIN = '/signin';
