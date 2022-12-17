@@ -12,7 +12,7 @@ const sagaMiddleware = createSagaMiddleware();
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   
 const authPersistConfig = {
-	key: process.env.NODE_ENV === 'production' ? 'root' : 'root_local',
+	key: process.env.NODE_ENV === 'production' ? 'early_bean_root' : 'early_bean_root_local',
 	storage,
 	whitelist: ['auth', 'profile'] // only auth and profile will be persisted
 };

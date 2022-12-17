@@ -22,9 +22,9 @@ export default function RegisterForm() {
   const [showpasswordConfirmation, setShowpasswordConfirmation] = useState(false);
 
   const { isAuthenticating, authStatus } = useSelector((state) => ({
-    isAuthenticating: state.app.isAuthenticating,
-    authStatus: state.app.authStatus
-}));
+      isAuthenticating: state.app.isAuthenticating,
+      authStatus: state.app.authStatus
+  }));
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string()
@@ -70,7 +70,7 @@ export default function RegisterForm() {
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { reset, handleSubmit  } = methods;
+  const { handleSubmit } = methods;
   const GENDER_OPTION = ['Male', 'Female'];
 
   useEffect(() => {
@@ -95,7 +95,6 @@ export default function RegisterForm() {
       phone: form.mobileNumber.trim(),
       dob: form.dob.trim()
     }));
-    reset();
   };
 
   return (

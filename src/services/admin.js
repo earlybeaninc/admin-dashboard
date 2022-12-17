@@ -12,8 +12,12 @@ export function signIn(data) {
 	return REQUEST_METHOD.authHeader(`${ADMIN_AUTH_ROUTE}/login`, data)
 }
 
-export function verifyEmail(data, kwargs) {
-	return REQUEST_METHOD.post(`${ADMIN_AUTH_ROUTE}/verify-email`, data, kwargs)
+export function verifyEmail(data) {
+	return REQUEST_METHOD.post(`${ADMIN_AUTH_ROUTE}/verify-email`, data)
+}
+
+export function resendVerifyEmailCode(data) {
+	return REQUEST_METHOD.post(`${ADMIN_AUTH_ROUTE}/verify-email/resend`, data)
 }
 
 export function forgotPassword(data) {

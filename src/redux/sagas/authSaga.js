@@ -3,7 +3,8 @@ import { call, put } from 'redux-saga/effects';
 import {
   ON_AUTHSTATE_FAIL,
   ON_AUTHSTATE_SUCCESS,
-  SIGNIN, SIGNOUT, SIGNUP
+  RESEND_VERIFY_EMAIL_CODE,
+  SIGNIN, SIGNOUT, SIGNUP, VERIFY_EMAIL_CODE
 } from '../../constants/constants';
 import { ADMIN_API } from '../../services';
 import { signInSuccess, signOutSuccess } from '../actions/authActions';
@@ -16,7 +17,13 @@ function* handleError(e) {
 
   if (e.errors) {
     yield put(setAuthStatus({ ...obj, status: 'error', message: e.message }));
-  }      
+  }
+  if (!e.errors && e.message?.token) {
+    yield put(setAuthStatus({ ...obj, status: 'error', message: e.message.token[0] }));
+  }
+  if (!e.errors && e.message) {
+    yield put(setAuthStatus({ ...obj, status: 'error', message: e.message }));
+  }    
 }
 
 function* initRequest() {
@@ -36,6 +43,13 @@ function* authSaga({ type, payload }) {
         };
         yield call(ADMIN_API.signIn, auth);
         // TODO: Redirect...
+
+        // TODO: get authenticated user details
+        yield put(signInSuccess({
+          id: null,
+          email: null,
+          email_verified_at: null
+        }));
 
       } catch (e) {
         yield put(setAuthenticating(false));
@@ -62,6 +76,14 @@ function* authSaga({ type, payload }) {
           dob: payload.dob
         };
         yield call(ADMIN_API.signUp, user);
+
+        // TODO: get authenticated user details
+        yield put(signInSuccess({
+          id: null,
+          email: payload.email,
+          email_verified_at: null
+        }));
+
         yield put(setAuthStatus({
           success: true,
           type: 'auth',
@@ -76,6 +98,63 @@ function* authSaga({ type, payload }) {
       }
     break;
 
+    case RESEND_VERIFY_EMAIL_CODE: {
+      try {
+        yield initRequest();
+
+        const data = {
+          email: payload.email
+        };
+        
+        yield call(ADMIN_API.resendVerifyEmailCode, data);
+        yield put(setAuthStatus({
+          success: true,
+          type: 'auth',
+          isError: false,
+          message: 'A verification mail has been resent to your registered email address.'
+        }));
+
+        yield put(setAuthenticating(false));
+      } catch (e) {
+        console.log(e)
+        yield handleError(e);
+      }
+      break;
+    }
+
+    case VERIFY_EMAIL_CODE: {
+      try {
+        yield initRequest();
+
+        const data = {
+          email: payload.email,
+          token: payload.token
+        };
+        
+        yield call(ADMIN_API.verifyEmail, data);
+    
+        yield put(setAuthStatus({
+          success: true,
+          type: 'auth',
+          isError: false,
+          message: 'Email verification successful. Redirecting...'
+        }));
+
+        // TODO: get authenticated user details
+        yield put(signInSuccess({
+          id: null,
+          email: payload.email,
+          email_verified_at: true
+        }));
+
+        yield put(setAuthenticating(false));
+      } catch (e) {
+        console.log(e)
+        yield handleError(e);
+      }
+      break;
+    }
+
     case ON_AUTHSTATE_SUCCESS: {
       const authTokens = JSON.parse(localStorage.getItem('authTokens'));
       const userShot = yield call(ADMIN_API.getAuthenticatedUser, {token: authTokens.access_token});
@@ -84,8 +163,11 @@ function* authSaga({ type, payload }) {
         const user = userShot;
 
         yield put(setProfile(user, authTokens));
+        // TODO: get authenticated user details
         yield put(signInSuccess({
-          id: payload.id
+          id: payload.id,
+          email: null,
+          email_verified_at: null
         }));
       }
 
@@ -111,14 +193,14 @@ function* authSaga({ type, payload }) {
       try {
         yield initRequest();
 
-        localStorage.removeItem('user');
-        const authTokens = JSON.parse(localStorage.getItem('authTokens'));
-        localStorage.removeItem('authTokens');
+        // localStorage.removeItem('user');
+        // const authTokens = JSON.parse(localStorage.getItem('authTokens'));
+        // localStorage.removeItem('authTokens');
 
-        yield put(clearProfile());
+        // yield put(clearProfile());
         yield put(signOutSuccess());
         yield put(setAuthenticating(false));
-        yield call(ADMIN_API.signOut, {token: authTokens.access_token});
+        // yield call(ADMIN_API.signOut, {token: authTokens.access_token});
       } catch (e) {
         console.log(e);
       }

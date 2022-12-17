@@ -5,7 +5,7 @@ import {  connect } from 'react-redux';
 import { useLocation, Navigate } from 'react-router-dom';
 import PropType from 'prop-types';
 
-import { ADMIN_DASHBOARD } from '../constants/routes';
+import { ADMIN_DASHBOARD, VERIFY_CODE } from '../constants/routes';
 import { useDidMount } from '../hooks';
 
 /**
@@ -23,6 +23,11 @@ const PublicRoute = ({ isAuth, isEmailVerified, component: Component, path }) =>
   const location = useLocation();
   const didMount = useDidMount(true);
 
+  if (isAuth && !isEmailVerified) {
+    if (didMount) {
+      return <Navigate to={VERIFY_CODE} replace state={{ location }} />;
+    }
+  }
   if (isAuth && isEmailVerified) {
     if (didMount) {
       return <Navigate to={ADMIN_DASHBOARD} replace state={{ location }} />;
@@ -38,20 +43,19 @@ const PublicRoute = ({ isAuth, isEmailVerified, component: Component, path }) =>
 
 PublicRoute.defaultProps = {
   isAuth: false,
-  isEmailVerified: '',
   path: '/'
 };
 
 PublicRoute.propTypes = {
   isAuth: PropType.bool,
-  isEmailVerified: PropType.string,
+  isEmailVerified: PropType.any,
   component: PropType.func.isRequired,
   path: PropType.string
 };
 
-const mapStateToProps = ({ auth, profile }) => ({
+const mapStateToProps = ({ auth }) => ({
   isAuth: !!auth,
-  isEmailVerified: profile?.email_verified_at || ''
+  isEmailVerified: auth?.email_verified_at
 });
 
 export default connect(mapStateToProps)(PublicRoute);

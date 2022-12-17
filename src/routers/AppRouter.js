@@ -7,12 +7,16 @@ import {
 
 import { createBrowserHistory } from 'history';
 
-import { DashboardApp, Login, Page404, Register }  from '../pages';
+import { 
+	DashboardApp, Login, Page404, Register,
+	VerifyCode
+}  from '../pages';
 
 import * as ROUTES from '../constants/routes';
 import PublicRoute from './PublicRoute';
 import AdminRoute from './AdminRoute';
 import StaticRoute from './StaticRoute';
+import ClientRoute from './ClientRoute';
 
 export const history = createBrowserHistory();
 
@@ -44,6 +48,15 @@ const AppRouter = () => (
 						<PublicRoute 
 							component={Register} 
 							path={ROUTES.SIGNUP}
+						/>
+					}
+				/>
+				<Route
+					path={ROUTES.VERIFY_CODE}
+					element={
+						<ClientRoute 
+							component={VerifyCode} 
+							path={ROUTES.VERIFY_CODE}
 						/>
 					}
 				/>

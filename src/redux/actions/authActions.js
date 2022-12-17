@@ -57,6 +57,21 @@ export const resetPassword = (_payload) => ({
   payload: _payload
 });
 
+export const resendVerifyEmailCode = (email) => ({
+  type: type.RESEND_VERIFY_EMAIL_CODE,
+  payload: {
+    email
+  }
+});
+
+export const verifyEmailCode = (email, token) => ({
+  type: type.VERIFY_EMAIL_CODE,
+  payload: {
+    email,
+    token
+  }
+});
+
 export const forgotPassword = (email) => ({
   type: type.FORGOT_PASSWORD,
   payload: {

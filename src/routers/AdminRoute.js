@@ -2,13 +2,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 import PropType from 'prop-types';
 import { styled } from '@mui/material/styles';
 
 import * as ROUTES from '../constants/routes';
 import { DashboardNavbar, DashboardSidebar } from '../layouts';
+import { useDidMount } from '../hooks';
 
 // ----------------------------------------------------------------------
 
@@ -47,41 +48,50 @@ const MainStyle = styled('div')(({ theme }) => ({
 
 const AdminRoute = ({ isAuth, isEmailVerified, component: Component }) => {
   const [open, setOpen] = useState(false);
+  const didMount = useDidMount(true);
 
-	if(isAuth && isEmailVerified) {
-    return (
-      <>
-        <RootStyle>
-          <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
-          <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
-          <MainStyle>
-            <Component />
-          </MainStyle>
-        </RootStyle>
-      </>
-    );
+  const location = useLocation();
+  const _from = location.state?.from?.pathname || "/";
+
+  if(isAuth && isEmailVerified) {
+    if (didMount) {
+      return (
+        <>
+          <RootStyle>
+            <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
+            <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
+            <MainStyle>
+              <Component />
+            </MainStyle>
+          </RootStyle>
+        </>
+      );
+    }
   }
 
   return (
-    <Navigate to={ROUTES.SIGNIN} />
+    <Navigate 
+      to={ROUTES.SIGNIN}
+      replace 
+			state={{from: _from }}
+    />
   );
   
 }
 
 AdminRoute.defaultProps = {
-  isAuth: false,
-  isEmailVerified: ''
+  isAuth: false
 };
 
 AdminRoute.propTypes = {
   isAuth: PropType.bool,
-  isEmailVerified: PropType.string,
+  isEmailVerified: PropType.any,
   component: PropType.func.isRequired
 };
 
-const mapStateToProps = ({ auth, profile }) => ({
+const mapStateToProps = ({ auth }) => ({
   isAuth: !!auth,
-  isEmailVerified: profile?.email_verified_at || ''
+  isEmailVerified: auth?.email_verified_at
 });
 
 export default connect(mapStateToProps)(AdminRoute);
