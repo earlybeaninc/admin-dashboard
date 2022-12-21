@@ -36,11 +36,12 @@ export function resetPassword(kwargs) {
 	return REQUEST_METHOD.post(`${ADMIN_AUTH_ROUTE}/reset-password`, kwargs)
 }
 
-export function signOut(token) {
-	return REQUEST_METHOD.post(`${ADMIN_AUTH_ROUTE}/logout`, token)
+export function signOut(kwargs) {
+	const data = {}
+	return REQUEST_METHOD.post(`${ADMIN_AUTH_ROUTE}/logout`, data, kwargs)
 }
 
 
 export function getAuthenticatedUser(kwargs) {
-	return REQUEST_METHOD.get(`${ADMIN_USERS_ROUTE}/me`, kwargs)
+	return REQUEST_METHOD.get(`${ADMIN_USERS_ROUTE}/my-profile`, kwargs)
 }

@@ -8,7 +8,7 @@ export default (state = initState, action) => { // eslint-disable-line
       return {
         id: action.payload.id,
         email: action.payload.email,
-        email_verified_at: action.payload.email_verified_at
+        email_verified: action.payload.email_verified
       };
     case SIGNOUT_SUCCESS:
       return null;

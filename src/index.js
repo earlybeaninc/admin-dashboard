@@ -9,11 +9,20 @@ import App from './App';
 import configureStore from './redux/store/store';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
+import { onAuthStateFail, onAuthStateSuccess } from './redux/actions/authActions';
 
 // ----------------------------------------------------------------------
 
 const { store, persistor } = configureStore();
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const authToken = JSON.parse(localStorage.getItem('authToken'));
+const user = JSON.parse(localStorage.getItem('user'));
+
+if (user && authToken) {
+  store.dispatch(onAuthStateSuccess(user));
+} else {
+  store.dispatch(onAuthStateFail('Failed to authenticate'));
+}
 
 root.render(
   <HelmetProvider>

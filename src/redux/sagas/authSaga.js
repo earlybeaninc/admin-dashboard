@@ -1,6 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 
 import {
+  EMAIL_VERIFICATION_SUCCESS_MESSAGE,
   ON_AUTHSTATE_FAIL,
   ON_AUTHSTATE_SUCCESS,
   RESEND_VERIFY_EMAIL_CODE,
@@ -41,16 +42,34 @@ function* authSaga({ type, payload }) {
           password: payload.password,
           email: payload.email
         };
-        yield call(ADMIN_API.signIn, auth);
-        // TODO: Redirect...
+        const authUser = yield call(ADMIN_API.signIn, auth);
+        if (authUser?.data.token) {
+          const userSnapshot = yield call(ADMIN_API.getAuthenticatedUser, {token: authUser.data.token});
 
-        // TODO: get authenticated user details
-        yield put(signInSuccess({
-          id: null,
-          email: null,
-          email_verified_at: null
-        }));
+          localStorage.setItem('user', JSON.stringify(userSnapshot));
+          localStorage.setItem('authToken', JSON.stringify(authUser.data));
 
+          yield put(setProfile(userSnapshot.data));
+          yield put(signInSuccess({
+            id: userSnapshot.data.id,
+            email: userSnapshot.data.email,
+            email_verified: true
+          }));
+          
+          yield put(setAuthStatus({
+            success: true,
+            type: 'auth',
+            isError: false,
+            message: 'Successfully signed in. Redirecting...'
+          }));
+
+        } else {
+          yield put(signInSuccess({
+            id: null,
+            email: payload.email,
+            email_verified: false
+          }));
+        }
       } catch (e) {
         yield put(setAuthenticating(false));
         yield put(setAuthStatus({ 
@@ -77,11 +96,10 @@ function* authSaga({ type, payload }) {
         };
         yield call(ADMIN_API.signUp, user);
 
-        // TODO: get authenticated user details
         yield put(signInSuccess({
           id: null,
           email: payload.email,
-          email_verified_at: null
+          email_verified: false
         }));
 
         yield put(setAuthStatus({
@@ -131,22 +149,16 @@ function* authSaga({ type, payload }) {
           token: payload.token
         };
         
-        yield call(ADMIN_API.verifyEmail, data);
-    
-        yield put(setAuthStatus({
-          success: true,
-          type: 'auth',
-          isError: false,
-          message: 'Email verification successful. Redirecting...'
-        }));
-
-        // TODO: get authenticated user details
-        yield put(signInSuccess({
-          id: null,
-          email: payload.email,
-          email_verified_at: true
-        }));
-
+        const verifyEmail = yield call(ADMIN_API.verifyEmail, data);
+        if (verifyEmail) {
+          yield put(signOutSuccess());          
+          yield put(setAuthStatus({
+            success: true,
+            type: 'auth',
+            isError: false,
+            message: EMAIL_VERIFICATION_SUCCESS_MESSAGE
+          }));  
+        }
         yield put(setAuthenticating(false));
       } catch (e) {
         console.log(e)
@@ -156,34 +168,31 @@ function* authSaga({ type, payload }) {
     }
 
     case ON_AUTHSTATE_SUCCESS: {
-      const authTokens = JSON.parse(localStorage.getItem('authTokens'));
-      const userShot = yield call(ADMIN_API.getAuthenticatedUser, {token: authTokens.access_token});
-      console.log(userShot)
-      if (userShot) { 
-        const user = userShot;
+      const authToken = JSON.parse(localStorage.getItem('authToken'));
+      const userSnapshot = yield call(ADMIN_API.getAuthenticatedUser, {token: authToken.token});
+      if (userSnapshot) { 
+        yield put(setProfile(userSnapshot.data));
 
-        yield put(setProfile(user, authTokens));
-        // TODO: get authenticated user details
         yield put(signInSuccess({
-          id: payload.id,
-          email: null,
-          email_verified_at: null
+          id: userSnapshot.data.id,
+          email: userSnapshot.data.email,
+          email_verified: true
         }));
-      }
 
-      yield put(setAuthStatus({
-        success: true,
-        type: 'auth',
-        isError: false,
-        message: 'Successfully signed in. Redirecting...'
-      }));
-      yield put(setAuthenticating(false));
+        yield put(setAuthStatus({
+          success: true,
+          type: 'auth',
+          isError: false,
+          message: 'Successfully signed in. Redirecting...'
+        }));
+        yield put(setAuthenticating(false));
+      }
       break;
     }
   
     case ON_AUTHSTATE_FAIL: {
       localStorage.removeItem('user');
-      localStorage.removeItem('authTokens');
+      localStorage.removeItem('authToken');
       yield put(clearProfile());
       yield put(signOutSuccess());
       break;
@@ -193,14 +202,15 @@ function* authSaga({ type, payload }) {
       try {
         yield initRequest();
 
-        // localStorage.removeItem('user');
-        // const authTokens = JSON.parse(localStorage.getItem('authTokens'));
-        // localStorage.removeItem('authTokens');
+        const authToken = JSON.parse(localStorage.getItem('authToken'))
 
-        // yield put(clearProfile());
+        yield put(clearProfile());
         yield put(signOutSuccess());
         yield put(setAuthenticating(false));
-        // yield call(ADMIN_API.signOut, {token: authTokens.access_token});
+        yield call(ADMIN_API.signOut, {token: authToken.token});
+
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
       } catch (e) {
         console.log(e);
       }

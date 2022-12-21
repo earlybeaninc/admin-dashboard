@@ -26,3 +26,5 @@ export const UPDATE_PROFILE_SUCCESS = 'UPDATE_PROFILE_SUCCESS';
 export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 
 export const GET_USER = 'GET_USER';
+
+export const EMAIL_VERIFICATION_SUCCESS_MESSAGE = 'Email verification successful. Redirecting...';

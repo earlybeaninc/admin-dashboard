@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as Yup from 'yup';
@@ -10,6 +11,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { OutlinedInput, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
+import { EMAIL_VERIFICATION_SUCCESS_MESSAGE } from '../../../constants/constants';
+import * as ROUTES from '../../../constants/routes'
 import { verifyEmailCode } from '../../../redux/actions/authActions';
 
 // routes
@@ -25,6 +28,7 @@ export default function VerifyCodeForm() {
 
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const VerifyCodeSchema = Yup.object().shape({
     code1: Yup.string().required('Code is required'),
@@ -68,11 +72,14 @@ export default function VerifyCodeForm() {
       if (authStatus?.message && !isAuthenticating) {
         enqueueSnackbar(authStatus.message, { variant: authStatus.status })
       }
-  }, [enqueueSnackbar, authStatus, isAuthenticating]);
+
+      if (authStatus?.message && authStatus.success &&  authStatus?.message === EMAIL_VERIFICATION_SUCCESS_MESSAGE) {
+        navigate(ROUTES.SIGNIN)
+      }
+  }, [enqueueSnackbar, navigate, authStatus, isAuthenticating]);
 
   const onSubmit = (data) => {
     const token = Object.values(data).join('')
-    console.log('code:', token);
     dispatch(verifyEmailCode(authUser.email, token));
     reset();
   };

@@ -85,13 +85,13 @@ AdminRoute.defaultProps = {
 
 AdminRoute.propTypes = {
   isAuth: PropType.bool,
-  isEmailVerified: PropType.any,
+  isEmailVerified: PropType.bool,
   component: PropType.func.isRequired
 };
 
 const mapStateToProps = ({ auth }) => ({
   isAuth: !!auth,
-  isEmailVerified: auth?.email_verified_at
+  isEmailVerified: auth?.email_verified || false
 });
 
 export default connect(mapStateToProps)(AdminRoute);
