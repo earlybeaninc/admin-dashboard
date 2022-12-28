@@ -24,57 +24,48 @@ const AppRouter = () => (
 	<Router history={history}>
 		<>
 			<Routes>
-				{/* <Route
-					path='/'
-					element={
-						<PublicRoute 
-							component={Login} 
-							path={ROUTES.SIGNIN} 
-						/>
-					}
-				/> */}
 				<Route
-					path={ROUTES.SIGNIN}
+					path={ROUTES.PATH_AUTH.signIn}
 					element={
 						<PublicRoute 
 							component={Login} 
-							path={ROUTES.SIGNIN} 
+							path={ROUTES.PATH_AUTH.signIn} 
 						/>
 					}
 				/>
 				<Route
-					path={ROUTES.SIGNUP}
+					path={ROUTES.PATH_AUTH.signUp}
 					element={
 						<PublicRoute 
 							component={Register} 
-							path={ROUTES.SIGNUP}
+							path={ROUTES.PATH_AUTH.signUp}
 						/>
 					}
 				/>
 				<Route
-					path={ROUTES.VERIFY_CODE}
+					path={ROUTES.PATH_AUTH.verifyCode}
 					element={
 						<ClientRoute 
 							component={VerifyCode} 
-							path={ROUTES.VERIFY_CODE}
+							path={ROUTES.PATH_AUTH.verifyCode}
 						/>
 					}
 				/>
 				<Route
-					path={ROUTES.ADMIN_DASHBOARD}
+					path={ROUTES.PATH_ADMIN.root}
 					element={
 						<AdminRoute 
 							component={DashboardApp} 
-							path={ROUTES.ADMIN_DASHBOARD} 
+							path={ROUTES.PATH_ADMIN.root} 
 						/>
 					}
 				/>
 				<Route
-					path={ROUTES.PARENT_LIST}
+					path={ROUTES.PATH_ADMIN.users.parents}
 					element={
 						<AdminRoute 
 							component={ParentList} 
-							path={ROUTES.PARENT_LIST} 
+							path={ROUTES.PATH_ADMIN.users.parents} 
 						/>
 					}
 				/>

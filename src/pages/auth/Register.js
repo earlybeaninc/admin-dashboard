@@ -71,7 +71,7 @@ export default function Register() {
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }}>
               Already have an account? {''}
-              <Link variant="subtitle2" component={RouterLink} to={ROUTES.SIGNIN}>
+              <Link variant="subtitle2" component={RouterLink} to={ROUTES.PATH_AUTH.signIn}>
                 Login
               </Link>
             </Typography>

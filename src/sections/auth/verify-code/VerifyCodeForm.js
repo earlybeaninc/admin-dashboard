@@ -12,7 +12,7 @@ import { OutlinedInput, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 import { EMAIL_VERIFICATION_SUCCESS_MESSAGE } from '../../../constants/constants';
-import * as ROUTES from '../../../constants/routes'
+import { PATH_AUTH }from '../../../constants/routes'
 import { verifyEmailCode } from '../../../redux/actions/authActions';
 
 // routes
@@ -74,7 +74,7 @@ export default function VerifyCodeForm() {
       }
 
       if (authStatus?.message && authStatus.success &&  authStatus?.message === EMAIL_VERIFICATION_SUCCESS_MESSAGE) {
-        navigate(ROUTES.SIGNIN)
+        navigate(PATH_AUTH.signIn)
       }
   }, [enqueueSnackbar, navigate, authStatus, isAuthenticating]);
 

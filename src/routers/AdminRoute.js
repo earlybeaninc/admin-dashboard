@@ -14,17 +14,6 @@ import { DashboardLayout } from '../layouts';
 
 // ----------------------------------------------------------------------
 
-// const APP_BAR_MOBILE = 64;
-// const APP_BAR_DESKTOP = 92;
-
-// const RootStyle = styled('div')({
-//   display: 'flex',
-//   minHeight: '100%',
-//   overflow: 'hidden'
-// });
-
-// ----------------------------------------------------------------------
-
 /**
  * Authentication guard for routes
  * 
@@ -35,7 +24,6 @@ import { DashboardLayout } from '../layouts';
  */
 
 const AdminRoute = ({ isAuth, isEmailVerified, component: Component }) => {
-  // const [open, setOpen] = useState(false);
   const didMount = useDidMount(true);
 
   const location = useLocation();
@@ -45,14 +33,7 @@ const AdminRoute = ({ isAuth, isEmailVerified, component: Component }) => {
     if (didMount) {
       return (
         <>
-          {/* <RootStyle> */}
-            <DashboardLayout component={Component} />
-            {/* <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
-            <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
-            <MainStyle>
-              <Component />
-            </MainStyle> */}
-          {/* </RootStyle> */}
+          <DashboardLayout component={Component} />
         </>
       );
     }
@@ -60,7 +41,7 @@ const AdminRoute = ({ isAuth, isEmailVerified, component: Component }) => {
 
   return (
     <Navigate 
-      to={ROUTES.SIGNIN}
+      to={ROUTES.PATH_AUTH.signIn}
       replace 
 			state={{from: _from }}
     />

@@ -46,7 +46,7 @@ export default function VerifyCode() {
             <Button
               size="small"
               component={RouterLink}
-              to={ROUTES.SIGNIN}
+              to={ROUTES.PATH_AUTH.signIn}
               startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} width={20} height={20} />}
               sx={{ mb: 3 }}
             >

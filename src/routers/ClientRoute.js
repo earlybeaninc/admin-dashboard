@@ -5,7 +5,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 
 import PropType from 'prop-types';
 
-import * as ROUTES from '../constants/routes';
+import { PATH_AUTH, PATH_ADMIN } from '../constants/routes';
 import { useDidMount } from '../hooks';
 
 // ----------------------------------------------------------------------
@@ -37,13 +37,13 @@ const ClientRoute = ({ isAuth, isEmailVerified, component: Component }) => {
 
 	if(isAuth && isEmailVerified) {
     if (didMount) {
-      return <Navigate to={ROUTES.ADMIN_DASHBOARD} replace state={{ location }} />;
+      return <Navigate to={PATH_ADMIN.root} replace state={{ location }} />;
     }
   }
 
   return (
     <Navigate 
-      to={ROUTES.SIGNIN}
+      to={PATH_AUTH.signIn}
       replace 
 			state={{from: _from }}
     />

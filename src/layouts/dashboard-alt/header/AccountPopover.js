@@ -51,7 +51,7 @@ export default function AccountPopover() {
 
   const handleLogout = async () => {
     try {
-      navigate(ROUTES.SIGNIN, { replace: true });
+      navigate(ROUTES.PATH_AUTH.signIn, { replace: true });
 
       if (isMountedRef.current) {
         handleClose();
