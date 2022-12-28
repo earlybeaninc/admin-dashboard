@@ -98,7 +98,44 @@ const CHART_COLORS = {
   red: ['#FF6C40', '#FF8F6D', '#FFBD98', '#FFF2D4'],
 };
 
+const COMMON = {
+  common: { black: '#000', white: '#fff' },
+  primary: { ...PRIMARY, contrastText: '#fff' },
+  secondary: { ...SECONDARY, contrastText: '#fff' },
+  info: { ...INFO, contrastText: '#fff' },
+  success: { ...SUCCESS, contrastText: GREY[800] },
+  warning: { ...WARNING, contrastText: GREY[800] },
+  error: { ...ERROR, contrastText: '#fff' },
+  grey: GREY,
+  gradients: GRADIENTS,
+  chart: CHART_COLORS,
+  divider: GREY[500_24],
+  action: {
+    hover: GREY[500_8],
+    selected: GREY[500_16],
+    disabled: GREY[500_80],
+    disabledBackground: GREY[500_24],
+    focus: GREY[500_24],
+    hoverOpacity: 0.08,
+    disabledOpacity: 0.48,
+  },
+};
+
 const palette = {
+  light: {
+    ...COMMON,
+    mode: 'light',
+    text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500] },
+    background: { paper: '#fff', default: '#fff', neutral: GREY[200] },
+    action: { active: GREY[600], ...COMMON.action },
+  },
+  dark: {
+    ...COMMON,
+    mode: 'dark',
+    text: { primary: '#fff', secondary: GREY[500], disabled: GREY[600] },
+    background: { paper: GREY[800], default: GREY[900], neutral: GREY[500_16] },
+    action: { active: GREY[500], ...COMMON.action },
+  },
   common: { black: '#000', white: '#fff' },
   primary: { ...PRIMARY },
   secondary: { ...SECONDARY },

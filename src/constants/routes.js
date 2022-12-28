@@ -8,7 +8,8 @@ export const SIGNUP = '/auth/signup';
 export const VERIFY_CODE = '/auth/verify';
 
 /* Admin routes */
-export const ADMIN_DASHBOARD = '/admin';
+export const ADMIN_DASHBOARD = '/';
+export const PARENT_LIST = '/user/parent';
 
 /* Static routes */
 export const PAGE404 = '/404';

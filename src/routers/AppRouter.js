@@ -8,7 +8,7 @@ import {
 import { createBrowserHistory } from 'history';
 
 import { 
-	DashboardApp, Login, Page404, Register,
+	DashboardApp, Login, Page404, ParentList, Register,
 	VerifyCode
 }  from '../pages';
 
@@ -24,7 +24,7 @@ const AppRouter = () => (
 	<Router history={history}>
 		<>
 			<Routes>
-				<Route
+				{/* <Route
 					path='/'
 					element={
 						<PublicRoute 
@@ -32,7 +32,7 @@ const AppRouter = () => (
 							path={ROUTES.SIGNIN} 
 						/>
 					}
-				/>
+				/> */}
 				<Route
 					path={ROUTES.SIGNIN}
 					element={
@@ -66,6 +66,15 @@ const AppRouter = () => (
 						<AdminRoute 
 							component={DashboardApp} 
 							path={ROUTES.ADMIN_DASHBOARD} 
+						/>
+					}
+				/>
+				<Route
+					path={ROUTES.PARENT_LIST}
+					element={
+						<AdminRoute 
+							component={ParentList} 
+							path={ROUTES.PARENT_LIST} 
 						/>
 					}
 				/>

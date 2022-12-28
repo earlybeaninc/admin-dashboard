@@ -1,39 +1,27 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 
 import PropType from 'prop-types';
-import { styled } from '@mui/material/styles';
+// import { styled } from '@mui/material/styles';
 
 import * as ROUTES from '../constants/routes';
-import { DashboardNavbar, DashboardSidebar } from '../layouts';
+// import { DashboardNavbar, DashboardSidebar } from '../layouts';
 import { useDidMount } from '../hooks';
+import { DashboardLayout } from '../layouts';
 
 // ----------------------------------------------------------------------
 
-const APP_BAR_MOBILE = 64;
-const APP_BAR_DESKTOP = 92;
+// const APP_BAR_MOBILE = 64;
+// const APP_BAR_DESKTOP = 92;
 
-const RootStyle = styled('div')({
-  display: 'flex',
-  minHeight: '100%',
-  overflow: 'hidden'
-});
-
-const MainStyle = styled('div')(({ theme }) => ({
-  flexGrow: 1,
-  overflow: 'auto',
-  minHeight: '100%',
-  paddingTop: APP_BAR_MOBILE + 24,
-  paddingBottom: theme.spacing(10),
-  [theme.breakpoints.up('lg')]: {
-    paddingTop: APP_BAR_DESKTOP + 24,
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2)
-  }
-}));
+// const RootStyle = styled('div')({
+//   display: 'flex',
+//   minHeight: '100%',
+//   overflow: 'hidden'
+// });
 
 // ----------------------------------------------------------------------
 
@@ -47,7 +35,7 @@ const MainStyle = styled('div')(({ theme }) => ({
  */
 
 const AdminRoute = ({ isAuth, isEmailVerified, component: Component }) => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const didMount = useDidMount(true);
 
   const location = useLocation();
@@ -57,13 +45,14 @@ const AdminRoute = ({ isAuth, isEmailVerified, component: Component }) => {
     if (didMount) {
       return (
         <>
-          <RootStyle>
-            <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
+          {/* <RootStyle> */}
+            <DashboardLayout component={Component} />
+            {/* <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
             <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
             <MainStyle>
               <Component />
-            </MainStyle>
-          </RootStyle>
+            </MainStyle> */}
+          {/* </RootStyle> */}
         </>
       );
     }

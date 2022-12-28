@@ -1,7 +1,10 @@
 /** Admin */
-export { default as AccountPopover} from './dashboard/AccountPopover';
-export { default as DashboardNavbar} from './dashboard/DashboardNavbar';
-export { default as DashboardSidebar} from './dashboard/DashboardSidebar';
-export { default as LanguagePopover} from './dashboard/LanguagePopover';
-export { default as NavConfig} from './dashboard/NavConfig';
-export { default as Searchbar} from './dashboard/Searchbar';
+export { default as AccountPopover} from './dashboard/header/AccountPopover';
+
+export { default as DashboardLayout} from './dashboard-alt/index';
+
+export { default as DashboardNavbar} from './dashboard/navbar/DashboardNavbar';
+export { default as DashboardSidebar} from './dashboard/navbar/DashboardSidebar';
+export { default as LanguagePopover} from './dashboard/header/LanguagePopover';
+export { default as NavConfig} from './dashboard/navbar/NavConfig';
+export { default as Searchbar} from './dashboard/header/Searchbar';
