@@ -29,8 +29,8 @@ export const PATH_ADMIN = {
 		root: path(ADMIN_DASHBOARD, 'users'),
 		profile: path(ADMIN_DASHBOARD, 'users/profile'),
 		account: path(ADMIN_DASHBOARD, 'users/account'),
-		parents: path(ADMIN_DASHBOARD, 'users/parent'),
-		kids: path(ADMIN_DASHBOARD, 'users/kid')
+		parent: path(ADMIN_DASHBOARD, 'users/parent'),
+		kid: path(ADMIN_DASHBOARD, 'users/kid')
 	},
 	wallet: {
 		root: path(ADMIN_DASHBOARD, 'wallet')

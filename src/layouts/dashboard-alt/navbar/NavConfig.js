@@ -32,10 +32,10 @@ const navConfig = [
         path: ROUTES.PATH_ADMIN.users.root,
         icon: ICONS.user,
         children: [
-          { title: 'profile', path: '/profile' },
-          { title: 'account', path: '/account' },
-          { title: 'parents', path: ROUTES.PATH_ADMIN.users.parents },
-          { title: 'kids', path: '/kids' },
+          // { title: 'profile', path: '#' },
+          // { title: 'account', path: '#' },
+          { title: 'parents', path: ROUTES.PATH_ADMIN.users.parent },
+          { title: 'kids', path: ROUTES.PATH_ADMIN.users.kid },
         ],
       },
       {
@@ -43,7 +43,7 @@ const navConfig = [
         path: ROUTES.PATH_ADMIN.wallet.root,
         icon: ICONS.banking,
         children: [
-          { title: 'children', path: '/children' },
+          { title: 'children', path: '#' },
         ],
       },
     ],

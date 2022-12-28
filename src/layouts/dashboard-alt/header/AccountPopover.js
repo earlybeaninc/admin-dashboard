@@ -1,17 +1,17 @@
 import { useSnackbar } from 'notistack';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
-// routes
-import * as ROUTES from '../../../constants/routes';
 // hooks
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
+import { signOut } from '../../../redux/actions/authActions';
 
 // ----------------------------------------------------------------------
 
@@ -22,18 +22,22 @@ const MENU_OPTIONS = [
   },
   {
     label: 'Profile',
-    linkTo: ROUTES.ADMIN_DASHBOARD,
+    linkTo: '#',
   },
   {
     label: 'Settings',
-    linkTo: ROUTES.ADMIN_DASHBOARD,
+    linkTo: '#',
   },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((state) => ({
+    user: state.profile
+  }));
 
   const isMountedRef = useIsMountedRef();
 
@@ -49,9 +53,9 @@ export default function AccountPopover() {
     setOpen(null);
   };
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
-      navigate(ROUTES.PATH_AUTH.signIn, { replace: true });
+      dispatch(signOut())
 
       if (isMountedRef.current) {
         handleClose();
@@ -100,10 +104,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            Early Bean
+          {`${user?.admin_profile?.first_name} ${user?.admin_profile?.last_name}`}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            admin@earlybean.co
+            {user?.email}
           </Typography>
         </Box>
 

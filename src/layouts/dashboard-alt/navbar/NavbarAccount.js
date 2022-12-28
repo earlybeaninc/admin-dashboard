@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
@@ -30,6 +31,10 @@ NavbarAccount.propTypes = {
 };
 
 export default function NavbarAccount({ isCollapse }) {
+  
+  const { user } = useSelector((state) => ({
+    user: state.profile
+  }));
 
   return (
     <Link underline="none" color="inherit" component={RouterLink} to={ROUTES.ADMIN_DASHBOARD}>
@@ -56,7 +61,7 @@ export default function NavbarAccount({ isCollapse }) {
           }}
         >
           <Typography variant="subtitle2" noWrap>
-            Name goes here
+            {`${user?.admin_profile?.first_name} ${user?.admin_profile?.last_name}`}
           </Typography>
           <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
             Super Admin
