@@ -2,6 +2,9 @@ import React, { StrictMode } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import PropType from 'prop-types';
+// @mui
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 // components
 import Settings from './components/settings';
 import RtlLayout from './components/RtlLayout';
@@ -21,20 +24,22 @@ function App({ store, persistor }) {
     <StrictMode>
       <Provider store={store}>
         <PersistGate loading={<LoadingScreen isDashboard={false} />} persistor={persistor}>
-          <ThemeProvider>
-            <ThemeColorPresets>
-              <RtlLayout>
-                <NotistackProvider>
-                    <MotionLazyContainer>
-                      <ScrollToTop />
-                      <BaseOptionChartStyle />
-                      <Settings />
-                      <AppRouter />
-                    </MotionLazyContainer>
-                </NotistackProvider>
-              </RtlLayout>
-            </ThemeColorPresets>
-          </ThemeProvider>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <ThemeProvider>
+              <ThemeColorPresets>
+                <RtlLayout>
+                  <NotistackProvider>
+                      <MotionLazyContainer>
+                        <ScrollToTop />
+                        <BaseOptionChartStyle />
+                        <Settings />
+                        <AppRouter />
+                      </MotionLazyContainer>
+                  </NotistackProvider>
+                </RtlLayout>
+              </ThemeColorPresets>
+            </ThemeProvider>
+          </LocalizationProvider>
         </PersistGate>
       </Provider>
     </StrictMode>  

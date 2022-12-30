@@ -1,22 +1,35 @@
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useSnackbar } from 'notistack';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
+import PropTypes from 'prop-types';
+import { useSnackbar } from 'notistack';
+import * as Yup from 'yup';
 // form
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { LoadingButton, MobileDatePicker } from '@mui/lab';
+import { 
+  Box, Card, FormLabel, Grid, Stack,
+  TextField, Typography 
+} from '@mui/material';
 // utils
 import { fData } from '../../../utils/formatNumber';
 // routes
 import * as ROUTES from '../../../constants/routes';
+import { GENDER_OPTION } from '../../../constants/constants';
+
 // _dtat
 import { countries } from '../../../_data';
 // components
-import { FormProvider, RHFSelect, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
+import { 
+  FormProvider, RHFRadioGroup, RHFSelect, 
+  RHFTextField, RHFUploadAvatar 
+} from '../../../components/hook-form';
+
+import { UpgardeKycTeir1 } from '../../../redux/actions/userActions';
+import { setLoading } from '../../../redux/actions/miscActions';
 
 // ----------------------------------------------------------------------
 
@@ -26,18 +39,29 @@ KycUpgradeUserForm.propTypes = {
 
 export default function KycUpgradeUserForm({ currentUser }) {
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
 
   const KycUpgradeSchema = Yup.object().shape({
-    bvn: Yup.string().required('BVN is required'),
-    email: Yup.string().email(),
-    placeOfBirth: Yup.string().required('Place of birthx is required'),
-    address: Yup.string().required('Address is required'),
-    country: Yup.string().required('country is required'),
-    dob: Yup.string().required('Date of Birth is required'),
-    gender: Yup.string().required('Gender is required'),
-    profileImage: Yup.mixed().test('required', 'Image is required', (value) => value !== ''),
+    bvn: Yup.string()
+      .required('BVN is required'),
+    email: Yup.string()
+      .nullable()
+      .email(),
+    placeOfBirth: Yup.string()
+      .required('Place of birth is required'),
+    address: Yup.string()
+      .required('Address is required'),
+    country: Yup.string()
+      .required('country is required'),
+    dob: Yup.date()
+      .required('Date of Birth is required'),
+    gender: Yup.mixed()
+      .required('Gender is required')
+      .oneOf(GENDER_OPTION),
+    profileImage: Yup.mixed()
+      .nullable(),
+      // .test('required', 'Image is required', (value) => value !== ''),
   });
 
   const defaultValues = useMemo(
@@ -49,7 +73,7 @@ export default function KycUpgradeUserForm({ currentUser }) {
       country: currentUser?.country || '',
       gender: currentUser?.gender || '',
       profileImage: currentUser?.profileImage || '',
-      dob: currentUser?.dob || '',
+      dob: currentUser?.dob || new Date(),
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentUser]
@@ -62,27 +86,41 @@ export default function KycUpgradeUserForm({ currentUser }) {
 
   const {
     reset,
+    control,
+    getValues,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
   } = methods;
 
+  const { requestStatus, isLoading } = useSelector((state) => ({
+    requestStatus: state.app.requestStatus,
+    isLoading: state.app.loading
+  }));
+
   useEffect(() => {
+    dispatch(setLoading(false));
     if (currentUser) {
       reset(defaultValues);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
-
-  const onSubmit = async () => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar('Update success!');
-      navigate(ROUTES.PATH_ADMIN.users.parent);
-    } catch (error) {
-      console.error(error);
+    if (requestStatus?.message && !isLoading) {
+      // navigate(ROUTES.PATH_ADMIN.users.parent);
+      enqueueSnackbar(requestStatus.message, { variant: requestStatus.status })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser, requestStatus, isLoading]);
+
+  const onSubmit = (form) => {
+      dispatch(UpgardeKycTeir1({
+        place_of_birth: form.placeOfBirth.trim(),
+        bvn: form.bvn.trim(),
+        email: form.email.trim().toLowerCase(),
+        address: form.address.trim(),
+        dob: `${form.dob.getFullYear()}-${form.dob.getMonth() + 1}-${form.dob.getDate()}`,
+        gender: form.gender.trim().toLowerCase(),
+        country: form.country.trim(),
+        image: getValues('profileImage'),
+        user_id: currentUser.userId
+      }));
   };
 
   const handleDrop = useCallback(
@@ -155,13 +193,35 @@ export default function KycUpgradeUserForm({ currentUser }) {
                 ))}
               </RHFSelect>
 
-              <RHFTextField name="gender" label="Gender" />
-              <RHFTextField name="address" label="Address" />
-              <RHFTextField name="dob" label="Date of Birth" />
+              <div>
+                <FormLabel id="gender-row-radio-buttons-group-label">Gender</FormLabel>
+                <RHFRadioGroup
+                  name="gender"
+                  options={GENDER_OPTION}
+                  sx={{
+                    '& .MuiFormControlLabel-root': { mr: 4 },
+                  }}
+                />
+              </div>
+
+              <Controller
+                name="dob"
+                control={control}
+                render={({ field }) => (
+                  <MobileDatePicker
+                    {...field}
+                    label="Date of Birth"
+                    inputFormat="yyyy-MM-dd"
+                    renderInput={(params) => <TextField {...params} fullWidth />}
+                  />
+                )}
+              />
+
+              <RHFTextField name="address" label="Address" fullWidth multiline rows={2} />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+              <LoadingButton type="submit" variant="contained" loading={isLoading}>
                 Save Changes
               </LoadingButton>
             </Stack>

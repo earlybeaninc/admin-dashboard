@@ -14,6 +14,7 @@ const KycUpgrade = () => {
 
   const _parentList = parentsList?.data?.data.map((parent) => ({
     id: parent?.id,
+    userId: parent?.user_id,
     profileImage: parent?.profile_image ? parent?.profile_image : '',
     name: `${parent.first_name} ${parent?.last_name}`,
     gender: parent?.gender,

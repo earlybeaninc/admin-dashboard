@@ -14,6 +14,7 @@ import { FormProvider, RHFRadioGroup, RHFTextField } from '../../../components/h
 // redux
 import { setAuthenticating, setAuthStatus } from '../../../redux/actions/miscActions';
 import { signUp } from '../../../redux/actions/authActions';
+import { GENDER_OPTION } from '../../../constants/constants';
 
 // ----------------------------------------------------------------------
 
@@ -71,7 +72,6 @@ export default function RegisterForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { handleSubmit } = methods;
-  const GENDER_OPTION = ['Male', 'Female'];
 
   useEffect(() => {
       dispatch(setAuthStatus(null));

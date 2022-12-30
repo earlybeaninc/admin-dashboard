@@ -2,6 +2,7 @@ import { takeLatest } from 'redux-saga/effects';
 
 import * as ACTION from '../../constants/constants';
 import authSaga from './authSaga';
+import userSaga from './userSaga';
 import profileSaga from './profileSaga';
 
 function* rootSaga() {
@@ -20,6 +21,10 @@ function* rootSaga() {
     ACTION.FORGOT_PASSWORD,
     ACTION.RESET_PASSWORD
   ], authSaga);
+  yield takeLatest([
+    ACTION.UPGRADE_KYC_TIER_1,
+    ACTION.UPGRADE_KYC_TIER_2
+  ], userSaga);
   yield takeLatest([
     ACTION.UPDATE_PROFILE
   ], profileSaga);
