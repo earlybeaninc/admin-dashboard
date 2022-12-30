@@ -4,7 +4,7 @@ import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
 import Blog from './pages/Blog';
-import User from './pages/users/components/ParentList';
+import User from './pages/users/components/ParentsList';
 import Login from './pages/auth/Login';
 import NotFound from './pages/Page404';
 import Register from './pages/Register';

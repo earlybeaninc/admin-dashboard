@@ -16,13 +16,14 @@ import {
   Typography,
   TableContainer,
   TablePagination,
+  Paper,
 } from '@mui/material';
 // components
 import Page from '../../../components/Page';
 import Label from '../../../components/Label';
 import Scrollbar from '../../../components/Scrollbar';
 import SearchNotFound from '../../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../sections/@dashboard/user';
+import { UserListHead, UserListToolbar, ParentMoreMenu } from '../../../sections/@dashboard/user';
 import { useUsers } from '../../../hooks';
 
 // ----------------------------------------------------------------------
@@ -68,7 +69,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ParentList() {
+export default function ParentsList() {
 
   const [page, setPage] = useState(0);
 
@@ -82,17 +83,18 @@ export default function ParentList() {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);  
   
-  const { parentList } = useUsers();
+  const { parentsList, isLoading } = useUsers();
 
-  const users = parentList?.data?.data.map((parent) => ({
+  const users = parentsList?.data?.data.map((parent) => ({
     id: parent?.id,
     profileImage: parent?.profile_image ? parent?.profile_image : '',
     name: `${parent.first_name} ${parent?.last_name}`,
     gender: parent?.gender,
+    dob: parent?.dob,
     email: parent?.email,
     kycTier: parent?.kyc_tier,
     isBvnVerified: parent?.is_bvn_verified,
-    isNinVerified: parent?.is_nin_verified,
+    isNinVerified: parent?.is_nin_verified
   }));
 
   const handleRequestSort = (event, property) => {
@@ -138,10 +140,10 @@ export default function ParentList() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - parentList?.data?.total) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - parentsList?.data?.total) : 0;
 
-  const _parentList = parentList?.data ? users : []
-  const filteredUsers = applySortFilter(_parentList, getComparator(order, orderBy), filterName);
+  const _parentsList = parentsList?.data ? users : []
+  const filteredUsers = applySortFilter(_parentsList, getComparator(order, orderBy), filterName);
   const isUserNotFound = !filteredUsers.length;
 
   return (
@@ -166,64 +168,81 @@ export default function ParentList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={parentList?.data?.total}
+                  rowCount={parentsList?.data?.total}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-                <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, gender, isBvnVerified, isNinVerified, kycTier, email } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
-
-                    return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={() => handleClick(name)} />
-                        </TableCell>
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            {/* <Avatar alt={name} src={profileImage} /> */}
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="left">{email}</TableCell>
-                        <TableCell align="left">{gender}</TableCell>
-                        <TableCell align="left">{kycTier ? 'Yes' : 'No'}</TableCell>
-                        <TableCell align="left">
-                          <Label variant="ghost" color={(!isBvnVerified && 'error') || 'success'}>
-                            {sentenceCase((!isBvnVerified && 'non-verified') || 'verified')}
-                          </Label>
-                        </TableCell>
-                        <TableCell align="left">
-                          <Label variant="ghost" color={(!isNinVerified && 'error') || 'success'}>
-                            {sentenceCase((!isNinVerified && 'non-verified') || 'verified')}
-                          </Label>
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <UserMoreMenu />
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
+                {parentsList.length === 0 && isLoading ? (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        <Paper>
+                          <Typography gutterBottom align="center" variant="subtitle1">
+                          {isLoading ? 'Fetching records...' : 'No record found'}
+                          </Typography>
+                        </Paper>
+                      </TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
+                  </TableBody>
+                ) : (
+                  <TableBody>
+                    {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                      const { 
+                        id, name, gender, 
+                        isBvnVerified, isNinVerified, 
+                        kycTier, email } = row; // eslint-disable-line
+                      const isItemSelected = selected.indexOf(name) !== -1;
 
-                {isUserNotFound && (
+                      return (
+                        <TableRow
+                          hover
+                          key={id}
+                          tabIndex={-1}
+                          role="checkbox"
+                          selected={isItemSelected}
+                          aria-checked={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox checked={isItemSelected} onChange={() => handleClick(name)} />
+                          </TableCell>
+                          <TableCell component="th" scope="row" padding="none">
+                            <Stack direction="row" alignItems="center" spacing={2}>
+                              {/* <Avatar alt={name} src={profileImage} /> */}
+                              <Typography variant="subtitle2" noWrap>
+                                {name}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{gender}</TableCell>
+                          <TableCell align="left">{kycTier ? 'Yes' : 'No'}</TableCell>
+                          <TableCell align="left">
+                            <Label variant="ghost" color={(!isBvnVerified && 'error') || 'success'}>
+                              {sentenceCase((!isBvnVerified && 'non-verified') || 'verified')}
+                            </Label>
+                          </TableCell>
+                          <TableCell align="left">
+                            <Label variant="ghost" color={(!isNinVerified && 'error') || 'success'}>
+                              {sentenceCase((!isNinVerified && 'non-verified') || 'verified')}
+                            </Label>
+                          </TableCell>
+
+                          <TableCell align="right">
+                            <ParentMoreMenu user={row} />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                )}
+
+                {isUserNotFound && !isLoading && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -239,7 +258,7 @@ export default function ParentList() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25  ]}
             component="div"
-            count={parentList?.data ? parentList?.data?.total : 0}
+            count={parentsList?.data ? parentsList?.data?.total : 0}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

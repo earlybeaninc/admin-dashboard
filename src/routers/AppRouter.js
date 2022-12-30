@@ -8,8 +8,8 @@ import {
 import { createBrowserHistory } from 'history';
 
 import { 
-	DashboardApp, KidList, Login, 
-	Page404, ParentList, Register,
+	DashboardApp, KidsList, KycUpgrade, Login, 
+	Page404, ParentsList, Register,
 	VerifyCode
 }  from '../pages';
 
@@ -74,8 +74,17 @@ const AppRouter = () => (
 					path={ROUTES.PATH_ADMIN.users.parent}
 					element={
 						<AdminRoute 
-							component={ParentList} 
+							component={ParentsList} 
 							path={ROUTES.PATH_ADMIN.users.parent} 
+						/>
+					}
+				/>
+				<Route
+					path={ROUTES.PATH_ADMIN.users.kycUpgrade1}
+					element={
+						<AdminRoute 
+							component={KycUpgrade} 
+							path={ROUTES.PATH_ADMIN.users.kycUpgrade1} 
 						/>
 					}
 				/>
@@ -83,7 +92,7 @@ const AppRouter = () => (
 					path={ROUTES.PATH_ADMIN.users.kid}
 					element={
 						<AdminRoute 
-							component={KidList} 
+							component={KidsList} 
 							path={ROUTES.PATH_ADMIN.users.kid} 
 						/>
 					}

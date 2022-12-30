@@ -12,6 +12,7 @@ import ScrollToTop from './components/ScrollToTop';
 import NotistackProvider from './components/NotistackProvider';
 import ThemeColorPresets from './components/ThemeColorPresets';
 import MotionLazyContainer from './components/animate/MotionLazyContainer';
+import LoadingScreen from './components/LoadingScreen';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +20,7 @@ function App({ store, persistor }) {
   return (
     <StrictMode>
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+        <PersistGate loading={<LoadingScreen isDashboard={false} />} persistor={persistor}>
           <ThemeProvider>
             <ThemeColorPresets>
               <RtlLayout>

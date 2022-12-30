@@ -3,17 +3,17 @@ import { useLocation } from 'react-router-dom';
 
 import LoadingScreen from '../../components/LoadingScreen';
 
-const ParentListComponent = React.lazy(() => import('./components/ParentList'));
+const ParentsListComponent = React.lazy(() => import('./components/ParentsList'));
 
-const ParentList = () => {
+const ParentsList = () => {
   const { pathname } = useLocation();
   return (
     <div>
       <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
-        <ParentListComponent />
+        <ParentsListComponent />
       </Suspense>
     </div>
   );
 }
 
-export default ParentList;
+export default ParentsList;

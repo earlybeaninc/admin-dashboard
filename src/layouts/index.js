@@ -1,2 +1,2 @@
 /** Admin */
-export { default as DashboardLayout} from './dashboard-alt/index';
+export { default as DashboardLayout} from './dashboard/index';

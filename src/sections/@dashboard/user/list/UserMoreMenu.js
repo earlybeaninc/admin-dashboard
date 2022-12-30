@@ -1,11 +1,19 @@
 import { useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+
+// import PropTypes from 'prop-types';
+
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
+
+// import * as ROUTES from '../../../../constants/routes'
 // component
-import Iconify from '../../../components/Iconify';
+import Iconify from '../../../../components/Iconify';
 
 // ----------------------------------------------------------------------
+// UserMoreMenu.propTypes = {
+//   user: PropTypes.object
+// };
 
 export default function UserMoreMenu() {
   const ref = useRef(null);
@@ -27,11 +35,14 @@ export default function UserMoreMenu() {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem sx={{ color: 'text.secondary' }}>
+        <MenuItem sx={{ color: 'text.secondary' }}
+          component={RouterLink} 
+          to="#"
+        >
           <ListItemIcon>
-            <Iconify icon="eva:trash-2-outline" width={24} height={24} />
+            <Iconify icon="mdi:account-cog-outline" width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="KYC Upgrade" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
         <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>

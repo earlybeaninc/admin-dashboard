@@ -30,6 +30,8 @@ export const PATH_ADMIN = {
 		profile: path(ADMIN_DASHBOARD, 'users/profile'),
 		account: path(ADMIN_DASHBOARD, 'users/account'),
 		parent: path(ADMIN_DASHBOARD, 'users/parent'),
+		kycUpgrade1: path(ADMIN_DASHBOARD, 'users/:id/kyc-upgrade-1'),
+		kycUpgrade2: path(ADMIN_DASHBOARD, 'users/:id/kyc-upgrade-2'),
 		kid: path(ADMIN_DASHBOARD, 'users/kid')
 	},
 	wallet: {

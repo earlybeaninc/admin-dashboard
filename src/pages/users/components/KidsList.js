@@ -15,6 +15,7 @@ import {
   Typography,
   TableContainer,
   TablePagination,
+  Paper,
 } from '@mui/material';
 // components
 import Page from '../../../components/Page';
@@ -65,7 +66,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function KidList() {
+export default function KidsList() {
 
   const [page, setPage] = useState(0);
 
@@ -79,9 +80,9 @@ export default function KidList() {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);  
   
-  const { kidList } = useUsers();
+  const { kidsList, isLoading } = useUsers();
 
-  const users = kidList?.data?.data.map((kid) => ({
+  const users = kidsList?.data?.data.map((kid) => ({
     id: kid?.id,
     profileImage: kid?.profile_image ? kid?.profile_image : '',
     name: kid.middle_name ? `${kid.first_name} ${kid?.last_name} ${kid.middle_name}` : `${kid.first_name} ${kid?.last_name}`,
@@ -134,10 +135,10 @@ export default function KidList() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - kidList?.data?.total) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - kidsList?.data?.total) : 0;
 
-  const _kidList = kidList?.data ? users : []
-  const filteredUsers = applySortFilter(_kidList, getComparator(order, orderBy), filterName);
+  const _kidsList = kidsList?.data ? users : []
+  const filteredUsers = applySortFilter(_kidsList, getComparator(order, orderBy), filterName);
   const isUserNotFound = !filteredUsers.length;
 
   return (
@@ -162,54 +163,68 @@ export default function KidList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={kidList?.data?.total}
+                  rowCount={kidsList?.data?.total}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-                <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, gender, phone, dob, email } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
-
-                    return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={() => handleClick(name)} />
-                        </TableCell>
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            {/* <Avatar alt={name} src={profileImage} /> */}
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="left">{email}</TableCell>
-                        <TableCell align="left">{gender}</TableCell>
-                        <TableCell align="left">{dob}</TableCell>
-                        <TableCell align="left">{phone}</TableCell>
-                        <TableCell align="right">
-                          <UserMoreMenu />
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
+                {kidsList.length === 0 && isLoading ? (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        <Paper>
+                          <Typography gutterBottom align="center" variant="subtitle1">
+                          {isLoading ? 'Fetching records...' : 'No record found'}
+                          </Typography>
+                        </Paper>
+                      </TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
+                  </TableBody>
+                ) : (
+                  <TableBody>
+                    {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                      const { id, name, gender, phone, dob, email } = row;
+                      const isItemSelected = selected.indexOf(name) !== -1;
 
-                {isUserNotFound && (
+                      return (
+                        <TableRow
+                          hover
+                          key={id}
+                          tabIndex={-1}
+                          role="checkbox"
+                          selected={isItemSelected}
+                          aria-checked={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox checked={isItemSelected} onChange={() => handleClick(name)} />
+                          </TableCell>
+                          <TableCell component="th" scope="row" padding="none">
+                            <Stack direction="row" alignItems="center" spacing={2}>
+                              {/* <Avatar alt={name} src={profileImage} /> */}
+                              <Typography variant="subtitle2" noWrap>
+                                {name}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{gender}</TableCell>
+                          <TableCell align="left">{dob}</TableCell>
+                          <TableCell align="left">{phone}</TableCell>
+                          <TableCell align="right">
+                            <UserMoreMenu />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                )}
+
+                {isUserNotFound && !isLoading && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -225,7 +240,7 @@ export default function KidList() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25  ]}
             component="div"
-            count={kidList?.data ? kidList?.data?.total : 0}
+            count={kidsList?.data ? kidsList?.data?.total : 0}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
