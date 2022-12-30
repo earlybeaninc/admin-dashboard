@@ -35,7 +35,6 @@ function* userSaga({type, payload}) {
 						image: payload.image,
 						user_id: payload.user_id
 					};
-					console.log(update)
 					const upgradeUser = yield call(ADMIN_API.upgradeKycTier1, update, {token: authToken.token});
 					console.log(upgradeUser)
 					yield put(setRequestStatus({
