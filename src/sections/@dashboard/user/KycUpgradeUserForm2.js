@@ -6,74 +6,54 @@ import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import * as Yup from 'yup';
 // form
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton, MobileDatePicker } from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
 import { 
-  Box, Card, FormLabel, Grid, Stack,
-  TextField, Typography 
+  Box, Card, Grid, Stack,
+  Typography 
 } from '@mui/material';
 // utils
 import { fData } from '../../../utils/formatNumber';
 // routes
 import * as ROUTES from '../../../constants/routes';
-import { GENDER_OPTION } from '../../../constants/constants';
 
-// _data
-import { countries } from '../../../_data';
 // components
 import { 
-  FormProvider, RHFRadioGroup, RHFSelect, 
-  RHFTextField, RHFUploadAvatar 
+  FormProvider, RHFTextField, RHFUploadAvatar 
 } from '../../../components/hook-form';
 
-import { UpgardeKycTeir1 } from '../../../redux/actions/userActions';
+import { UpgardeKycTeir2 } from '../../../redux/actions/userActions';
 import { setLoading, setRequestStatus } from '../../../redux/actions/miscActions';
 
 // ----------------------------------------------------------------------
 
-KycUpgradeUserForm.propTypes = {
+KycUpgradeUserForm2.propTypes = {
   currentUser: PropTypes.any,
 };
 
-export default function KycUpgradeUserForm({ currentUser }) {
+export default function KycUpgradeUserForm2({ currentUser }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
   const KycUpgradeSchema = Yup.object().shape({
-    bvn: Yup.string()
-      .required('BVN is required'),
+    meansOfId: Yup.string()
+      .required('Means of Identification is required'),
     email: Yup.string()
       .nullable()
       .email(),
-    placeOfBirth: Yup.string()
-      .required('Place of birth is required'),
-    address: Yup.string()
-      .required('Address is required'),
-    country: Yup.string()
-      .required('country is required'),
-    dob: Yup.date()
-      .required('Date of Birth is required'),
-    gender: Yup.mixed()
-      .required('Gender is required')
-      .oneOf(GENDER_OPTION),
-    profileImage: Yup.mixed()
+    idImage: Yup.mixed()
       .nullable(),
       // .test('required', 'Image is required', (value) => value !== ''),
   });
 
   const defaultValues = useMemo(
     () => ({
-      bvn: currentUser?.bvn || '',
+      meansOfId: currentUser?.means_of_id || '',
       email: currentUser?.email || '',
-      placeOfBirth: currentUser?.placeOfBirth || '',
-      address: currentUser?.address || '',
-      country: currentUser?.country || '',
-      gender: currentUser?.gender || '',
-      profileImage: currentUser?.profileImage || '',
-      dob: currentUser?.dob || new Date(),
+      idImage: currentUser?.idImage || ''
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentUser]
@@ -85,7 +65,6 @@ export default function KycUpgradeUserForm({ currentUser }) {
   });
 
   const {
-    control,
     getValues,
     setValue,
     handleSubmit,
@@ -109,15 +88,10 @@ export default function KycUpgradeUserForm({ currentUser }) {
   }, [requestStatus, isLoading]);
 
   const onSubmit = (form) => {
-      dispatch(UpgardeKycTeir1({
-        place_of_birth: form.placeOfBirth.trim(),
-        bvn: form.bvn.trim(),
+      dispatch(UpgardeKycTeir2({
+        means_of_id: form.meansOfId.trim(),
         email: form.email.trim().toLowerCase(),
-        address: form.address.trim(),
-        dob: `${form.dob.getFullYear()}-${form.dob.getMonth() + 1}-${form.dob.getDate()}`,
-        gender: form.gender.trim().toLowerCase(),
-        country: form.country.trim(),
-        image: getValues('profileImage'),
+        image: getValues('idImage'),
         user_id: currentUser.userId
       }));
   };
@@ -128,7 +102,7 @@ export default function KycUpgradeUserForm({ currentUser }) {
 
       if (file) {
         setValue(
-          'profileImage',
+          'idImage',
           Object.assign(file, {
             preview: URL.createObjectURL(file),
           })
@@ -145,7 +119,7 @@ export default function KycUpgradeUserForm({ currentUser }) {
           <Card sx={{ py: 10, px: 3 }}>
             <Box sx={{ mb: 5 }}>
               <RHFUploadAvatar
-                name="profileImage"
+                name="idImage"
                 accept="image/*"
                 maxSize={3145728}
                 onDrop={handleDrop}
@@ -179,44 +153,8 @@ export default function KycUpgradeUserForm({ currentUser }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="bvn" label="Bank Verification Number" />
+              <RHFTextField name="meansOfId" label="Means of Identification" />
               <RHFTextField name="email" label="Email Address" />
-              <RHFTextField name="placeOfBirth" label="Place of Birth" />
-
-              <RHFSelect name="country" label="Country" placeholder="Country">
-                <option value="" />
-                {countries.map((option) => (
-                  <option key={option.code} value={option.label}>
-                    {option.label}
-                  </option>
-                ))}
-              </RHFSelect>
-
-              <div>
-                <FormLabel id="gender-row-radio-buttons-group-label">Gender</FormLabel>
-                <RHFRadioGroup
-                  name="gender"
-                  options={GENDER_OPTION}
-                  sx={{
-                    '& .MuiFormControlLabel-root': { mr: 4 },
-                  }}
-                />
-              </div>
-
-              <Controller
-                name="dob"
-                control={control}
-                render={({ field }) => (
-                  <MobileDatePicker
-                    {...field}
-                    label="Date of Birth"
-                    inputFormat="yyyy-MM-dd"
-                    renderInput={(params) => <TextField {...params} fullWidth />}
-                  />
-                )}
-              />
-
-              <RHFTextField name="address" label="Address" fullWidth multiline rows={2} />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

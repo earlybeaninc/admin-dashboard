@@ -12,8 +12,6 @@ const useUsers = () => {
 
   const fetchParentsList = useCallback(async () => {
     try {
-      setLoading(true);
-      setError('');
       const authToken = JSON.parse(localStorage.getItem('authToken'));
       const requestOptions = {
         method: "GET",
@@ -24,6 +22,8 @@ const useUsers = () => {
         }
       }
       if (parentsList.length === 0 && isDidMount) {
+        setLoading(true);
+        setError('');
         const _parents =  await fetch(`${ROUTE.ADMIN_API}/users/parents`, 
           requestOptions)
         .then(res => res.json())
@@ -54,8 +54,6 @@ const useUsers = () => {
 
   const fetchKidsList = useCallback(async () => {
       try {
-        setLoading(true);
-        setError('');
         const authToken = JSON.parse(localStorage.getItem('authToken'));
         const requestOptions = {
           method: "GET",
@@ -66,6 +64,8 @@ const useUsers = () => {
           }
         }
         if (kidsList.length === 0 && isDidMount) {
+          setLoading(true);
+          setError('');
           const _kids =  await fetch(`${ROUTE.ADMIN_API}/users/kids`, 
             requestOptions)
           .then(res => res.json())

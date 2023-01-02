@@ -1,6 +1,6 @@
 import { call, put } from 'redux-saga/effects';
 
-import {UPGRADE_KYC_TIER_1 } from '../../constants/constants';
+import {UPGRADE_KYC_TIER_1, UPGRADE_KYC_TIER_2 } from '../../constants/constants';
 import { setLoading, setRequestStatus } from '../actions/miscActions';
 import { ADMIN_API } from '../../services';
 
@@ -35,14 +35,41 @@ function* userSaga({type, payload}) {
 						image: payload.image,
 						user_id: payload.user_id
 					};
-					const upgradeUser = yield call(ADMIN_API.upgradeKycTier1, update, {token: authToken.token});
-					console.log(upgradeUser)
+					const res = yield call(ADMIN_API.upgradeKycTier1, update, {token: authToken.token});
 					yield put(setRequestStatus({
 						success: true,
 						type: 'user',
 						isError: false,
-						message: 'Update success!'
+						message: res.message
 					  }));
+				}
+				yield put(setLoading(false));
+
+			} catch (e) {
+				console.log(e);
+				yield handleError(e);
+			}
+			break;
+		}
+		case UPGRADE_KYC_TIER_2: {
+			try {
+				yield initRequest();
+		
+				const authToken = JSON.parse(localStorage.getItem('authToken'));
+				if (authToken) {
+					const update = {
+						means_of_id: payload.means_of_id,
+						email: payload.email,
+						image: payload.image,
+						user_id: payload.user_id
+					};
+					const res = yield call(ADMIN_API.upgradeKycTier2, update, {token: authToken.token});
+					yield put(setRequestStatus({
+						success: true,
+						type: 'user',
+						isError: false,
+						message: res.message
+						}));
 				}
 				yield put(setLoading(false));
 

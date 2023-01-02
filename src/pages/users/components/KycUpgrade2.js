@@ -10,16 +10,16 @@ import useSettings from '../../../hooks/useSettings';
 import Page from '../../../components/Page';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
 // sections
-import KycUpgradeUserForm from '../../../sections/@dashboard/user/KycUpgradeUserForm';
+import KycUpgradeUserForm2 from '../../../sections/@dashboard/user/KycUpgradeUserForm2';
 
 // ----------------------------------------------------------------------
 
-KycUpgrade.propTypes = {
+KycUpgrade2.propTypes = {
   parentId: PropTypes.string,
   parentList: PropTypes.array,
 };
 
-export default function KycUpgrade({ parentId, parentList }) {
+export default function KycUpgrade2({ parentId, parentList }) {
   const { themeStretch } = useSettings();
   const currentUser = parentList.find((parent) => parent?.id === parentId);
 
@@ -35,7 +35,7 @@ export default function KycUpgrade({ parentId, parentList }) {
           ]}
         />
 
-        <KycUpgradeUserForm currentUser={currentUser} />
+        <KycUpgradeUserForm2 currentUser={currentUser} />
       </Container>
     </Page>
   );

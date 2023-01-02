@@ -35,15 +35,25 @@ export default function UserMoreMenu({ user }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        {user.kycTier !== 2 && (
+        <MenuItem sx={{ color: 'text.secondary' }}
+          component={RouterLink} 
+          to={`${ROUTES.PATH_ADMIN.users.root}/${user.id}/kyc-upgrade-1`}
+        >
+          <ListItemIcon>
+            <Iconify icon="mdi:account-cog-outline" width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary="KYC Upgrade" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem>
+
+        {user.kycTier && (
           <MenuItem sx={{ color: 'text.secondary' }}
             component={RouterLink} 
-            to={`${ROUTES.PATH_ADMIN.users.root}/${user.id}/kyc-upgrade-1`}
+            to={`${ROUTES.PATH_ADMIN.users.root}/${user.id}/kyc-upgrade-2`}
           >
             <ListItemIcon>
               <Iconify icon="mdi:account-cog-outline" width={24} height={24} />
             </ListItemIcon>
-            <ListItemText primary="KYC Upgrade" primaryTypographyProps={{ variant: 'body2' }} />
+            <ListItemText primary="KYC Upgrade 2" primaryTypographyProps={{ variant: 'body2' }} />
           </MenuItem>
         )}
 

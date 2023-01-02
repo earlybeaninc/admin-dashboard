@@ -146,6 +146,20 @@ export default function ParentsList() {
   const filteredUsers = applySortFilter(_parentsList, getComparator(order, orderBy), filterName);
   const isUserNotFound = !filteredUsers.length;
 
+  const getKycTierStatus = (status) => {
+    let value = 'No';
+    switch (status) {
+      case 1:
+        value = 'Tier 1'
+        return value
+      case 2:
+        value = 'Tier 2'
+        return value
+      default:
+          return value;
+    }
+  }
+
   return (
     <Page title="User">
       <Container>
@@ -173,7 +187,7 @@ export default function ParentsList() {
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-                {parentsList.length === 0 && isLoading ? (
+                {parentsList.length === 0 ? (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -216,7 +230,8 @@ export default function ParentsList() {
                           </TableCell>
                           <TableCell align="left">{email}</TableCell>
                           <TableCell align="left">{gender}</TableCell>
-                          <TableCell align="left">{kycTier ? 'Yes' : 'No'}</TableCell>
+                          <TableCell align="left">{getKycTierStatus(kycTier)}
+                          </TableCell>
                           <TableCell align="left">
                             <Label variant="ghost" color={(!isBvnVerified && 'error') || 'success'}>
                               {sentenceCase((!isBvnVerified && 'non-verified') || 'verified')}
