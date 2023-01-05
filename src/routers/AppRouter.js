@@ -8,9 +8,10 @@ import {
 import { createBrowserHistory } from 'history';
 
 import { 
+	CreateChildWallet,
 	DashboardApp, KidsList, KycUpgrade, KycUpgrade2, 
 	Login,Page404, ParentsList, Register,
-	VerifyCode
+	TransactionsList, VerifyCode, WalletsList
 }  from '../pages';
 
 import * as ROUTES from '../constants/routes';
@@ -103,6 +104,33 @@ const AppRouter = () => (
 						<AdminRoute 
 							component={KidsList} 
 							path={ROUTES.PATH_ADMIN.users.kid} 
+						/>
+					}
+				/>
+				<Route
+					path={ROUTES.PATH_ADMIN.transactions.root}
+					element={
+						<AdminRoute 
+							component={TransactionsList} 
+							path={ROUTES.PATH_ADMIN.transactions.root} 
+						/>
+					}
+				/>
+				<Route
+					path={ROUTES.PATH_ADMIN.wallet.root}
+					element={
+						<AdminRoute 
+							component={WalletsList} 
+							path={ROUTES.PATH_ADMIN.wallet.root} 
+						/>
+					}
+				/>
+				<Route
+					path={ROUTES.PATH_ADMIN.wallet.createChildWallet}
+					element={
+						<AdminRoute 
+							component={CreateChildWallet} 
+							path={ROUTES.PATH_ADMIN.wallet.createChildWallet} 
 						/>
 					}
 				/>

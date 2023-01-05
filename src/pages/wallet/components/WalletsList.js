@@ -23,19 +23,22 @@ import Page from '../../../components/Page';
 import Label from '../../../components/Label';
 import Scrollbar from '../../../components/Scrollbar';
 import SearchNotFound from '../../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, ParentMoreMenu } from '../../../sections/@dashboard/user';
-import { useUsers } from '../../../hooks';
+import { UserListHead, UserListToolbar } from '../../../sections/@dashboard/user';
+import { useWallets } from '../../../hooks';
+import { fCurrency } from '../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'email', label: 'Email', alignRight: false },
-  { id: 'gender', label: 'Gender', alignRight: false },
-  { id: 'kycTier', label: 'KYC Tier', alignRight: false },
-  { id: 'isBvnVerified', label: 'BVN Status', alignRight: false },
-  { id: 'isNinVerified', label: 'NIN Status', alignRight: false },
-  { id: '' },
+	{ id: 'name', label: 'Name', alignRight: false },
+  { id: 'parentId', label: 'User Type', alignRight: false },
+	{ id: 'acctNo', label: 'Account No.', alignRight: false },
+	{ id: 'acctType', label: 'Account Type', alignRight: false },
+	{ id: 'bankName', label: 'Bank Name', alignRight: false },
+  { id: 'balance', label: 'balance', alignRight: false },
+	{ id: 'currency', label: 'Currency', alignRight: false },
+	{ id: 'walletType', label: 'Type', alignRight: false },
+	{ id: 'status', label: 'Status', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -64,12 +67,12 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return array.filter((_user) => `${_user.first_name} ${_user.last_name}`.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return array.filter((_wallet) => `${_wallet.name}`.indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ParentsList() {
+export default function WalletsList() {
 
   const [page, setPage] = useState(0);
 
@@ -83,19 +86,19 @@ export default function ParentsList() {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);  
   
-  const { parentsList, isLoading } = useUsers();
+  const { walletsList, isLoading } = useWallets();
 
-  const users = parentsList?.data?.data.map((parent) => ({
+  const wallets = walletsList?.data?.data.map((parent) => ({
     id: parent?.id,
-    profileImage: parent?.profile_image ? parent?.profile_image : '',
-    name: `${parent.first_name} ${parent?.last_name}`,
-    gender: parent?.gender,
-    dob: parent?.dob,
-    email: parent?.email,
-    kycTier: parent?.kyc_tier,
-    isBvnVerified: parent?.is_bvn_verified,
-    isNinVerified: parent?.is_nin_verified,
-    userId: parent?.user_id
+	  name: parent?.name,
+    acctNo: parent?.account_number,
+    acctType: parent?.account_type,
+    bankName: parent?.bank_name,
+    currency: parent?.currency,
+    walletType: parent?.type,
+    balance: parent?.balance ,
+    parentId: parent?.parent_id ? 'Parent' : 'Child',
+    status: parent?.status,
   }));
 
   const handleRequestSort = (event, property) => {
@@ -106,7 +109,7 @@ export default function ParentsList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = wallets.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -141,36 +144,19 @@ export default function ParentsList() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - parentsList?.data?.total) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - walletsList?.data?.total) : 0;
 
-  const _parentsList = parentsList?.data ? users : []
-  const filteredUsers = applySortFilter(_parentsList, getComparator(order, orderBy), filterName);
-  const isUserNotFound = !filteredUsers.length;
-
-  const getKycTierStatus = (status) => {
-    let value = 'No';
-    switch (status) {
-      case 1:
-        value = 'Tier 1'
-        return value
-      case 2:
-        value = 'Tier 2'
-        return value
-      default:
-          return value;
-    }
-  }
+  const _walletsList = walletsList?.data ? wallets : []
+  const filteredWallets = applySortFilter(_walletsList, getComparator(order, orderBy), filterName);
+  const isWalletNotFound = !filteredWallets.length;
 
   return (
-    <Page title="User">
+    <Page title="Wallets">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            Wallets
           </Typography>
-          {/* <Button variant="contained" component={RouterLink} to="#" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
-          </Button> */}
         </Stack>
 
         <Card>
@@ -183,12 +169,12 @@ export default function ParentsList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={parentsList?.data?.total}
+                  rowCount={walletsList?.data?.total}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-                {parentsList.length === 0 ? (
+                {walletsList.length === 0 ? (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -202,11 +188,11 @@ export default function ParentsList() {
                   </TableBody>
                 ) : (
                   <TableBody>
-                    {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    {filteredWallets.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                       const { 
-                        id, name, gender, 
-                        isBvnVerified, isNinVerified, 
-                        kycTier, userId, email } = row; // eslint-disable-line
+                        id, name, balance, parentId,
+                        acctNo, acctType, currency, 
+                        bankName, walletType, status } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
 
                       return (
@@ -223,29 +209,22 @@ export default function ParentsList() {
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              {/* <Avatar alt={name} src={profileImage} /> */}
                               <Typography variant="subtitle2" noWrap>
                                 {name}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{email}</TableCell>
-                          <TableCell align="left">{gender}</TableCell>
-                          <TableCell align="left">{getKycTierStatus(kycTier)}
-                          </TableCell>
+                          <TableCell align="left">{parentId}</TableCell>
+                          <TableCell align="left">{acctNo}</TableCell>
+                          <TableCell align="left">{acctType}</TableCell>
+                          <TableCell align="left">{bankName}</TableCell>
+                          <TableCell align="left">{fCurrency(balance)}</TableCell>
+                          <TableCell align="left">{currency}</TableCell>
+                          <TableCell align="left">{walletType}</TableCell>
                           <TableCell align="left">
-                            <Label variant="ghost" color={(!isBvnVerified && 'error') || 'success'}>
-                              {sentenceCase((!isBvnVerified && 'non-verified') || 'verified')}
+                            <Label variant="ghost" color={(status !== 'active' && 'error') || 'success'}>
+                              {sentenceCase((status !== 'active' && 'non-active') || 'active')}
                             </Label>
-                          </TableCell>
-                          <TableCell align="left">
-                            <Label variant="ghost" color={(!isNinVerified && 'error') || 'success'}>
-                              {sentenceCase((!isNinVerified && 'non-verified') || 'verified')}
-                            </Label>
-                          </TableCell>
-
-                          <TableCell align="right">
-                            <ParentMoreMenu user={row} />
                           </TableCell>
                         </TableRow>
                       );
@@ -258,7 +237,7 @@ export default function ParentsList() {
                   </TableBody>
                 )}
 
-                {isUserNotFound && !isLoading && (
+                {isWalletNotFound && !isLoading && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -274,7 +253,7 @@ export default function ParentsList() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25  ]}
             component="div"
-            count={parentsList?.data ? parentsList?.data?.total : 0}
+            count={walletsList?.data ? walletsList?.data?.total : 0}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

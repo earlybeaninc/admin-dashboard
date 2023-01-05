@@ -23,7 +23,8 @@ function* rootSaga() {
   ], authSaga);
   yield takeLatest([
     ACTION.UPGRADE_KYC_TIER_1,
-    ACTION.UPGRADE_KYC_TIER_2
+    ACTION.UPGRADE_KYC_TIER_2,
+    ACTION.CREATE_CHILD_WALLET
   ], userSaga);
   yield takeLatest([
     ACTION.UPDATE_PROFILE

@@ -3,6 +3,7 @@ import * as ROUTES from '../constants/routes';
 
 const ADMIN_AUTH_ROUTE = `${ROUTES.ADMIN_API}/auth`
 const ADMIN_USERS_ROUTE = `${ROUTES.ADMIN_API}/users`
+const ADMIN_WALLET_ROUTE = `${ROUTES.ADMIN_API}/wallets`
 
 /** Auth endpoints */
 export function signUp(data) {
@@ -44,4 +45,9 @@ export function upgradeKycTier1(data, kwargs) {
 }
 export function upgradeKycTier2(data, kwargs) {
 	return REQUEST_METHOD.put(`${ADMIN_USERS_ROUTE}/upgrade/t2`, data, kwargs)
+}
+
+/** Wallet endpoints */
+export function createChildWallet(data, kwargs) {
+	return REQUEST_METHOD.post(`${ADMIN_WALLET_ROUTE}/children`, data, kwargs)
 }

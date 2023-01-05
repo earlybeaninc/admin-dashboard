@@ -38,12 +38,17 @@ const navConfig = [
           { title: 'kids', path: ROUTES.PATH_ADMIN.users.kid },
         ],
       },
+      { 
+        title: 'transactions', 
+        path: ROUTES.PATH_ADMIN.transactions.root, 
+        icon: ICONS.analytics
+      },
       {
         title: 'wallet',
         path: ROUTES.PATH_ADMIN.wallet.root,
         icon: ICONS.banking,
         children: [
-          { title: 'children', path: '#' },
+          { title: 'wallets', path: ROUTES.PATH_ADMIN.wallet.root },
         ],
       },
     ],

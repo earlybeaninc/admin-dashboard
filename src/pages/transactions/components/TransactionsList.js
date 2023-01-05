@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { sentenceCase } from 'change-case';
 // material
 import {
   Card,
@@ -20,22 +19,23 @@ import {
 } from '@mui/material';
 // components
 import Page from '../../../components/Page';
-import Label from '../../../components/Label';
 import Scrollbar from '../../../components/Scrollbar';
 import SearchNotFound from '../../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, ParentMoreMenu } from '../../../sections/@dashboard/user';
-import { useUsers } from '../../../hooks';
+import { UserListHead, UserListToolbar } from '../../../sections/@dashboard/user';
+import { useTransactions } from '../../../hooks';
+import { fCurrency } from '../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'email', label: 'Email', alignRight: false },
-  { id: 'gender', label: 'Gender', alignRight: false },
-  { id: 'kycTier', label: 'KYC Tier', alignRight: false },
-  { id: 'isBvnVerified', label: 'BVN Status', alignRight: false },
-  { id: 'isNinVerified', label: 'NIN Status', alignRight: false },
-  { id: '' },
+	{ id: 'reference', label: 'Reference', alignRight: false },
+	{ id: 'amount', label: 'Amount', alignRight: false },
+	{ id: 'type', label: 'Type', alignRight: false },
+	{ id: 'amountCurrency', label: 'Currency', alignRight: false },
+	{ id: 'moneyFrom', label: 'From', alignRight: false },
+	{ id: 'moneyTo', label: 'To', alignRight: false },
+	{ id: 'description', label: 'Description', alignRight: false },
+	{ id: 'reason', label: 'Reason', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -64,12 +64,12 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return array.filter((_user) => `${_user.first_name} ${_user.last_name}`.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return array.filter((_transaction) => `${_transaction.reference}`.indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ParentsList() {
+export default function TransactionsList() {
 
   const [page, setPage] = useState(0);
 
@@ -79,23 +79,22 @@ export default function ParentsList() {
 
   const [orderBy, setOrderBy] = useState('name');
 
-  const [filterName, setFilterName] = useState('');
+  const [filterRefNo, setFilterRefNo] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(10);  
   
-  const { parentsList, isLoading } = useUsers();
+  const { transactionsList, isLoading } = useTransactions();
 
-  const users = parentsList?.data?.data.map((parent) => ({
+  const transactions = transactionsList?.data?.data.map((parent) => ({
     id: parent?.id,
-    profileImage: parent?.profile_image ? parent?.profile_image : '',
-    name: `${parent.first_name} ${parent?.last_name}`,
-    gender: parent?.gender,
-    dob: parent?.dob,
-    email: parent?.email,
-    kycTier: parent?.kyc_tier,
-    isBvnVerified: parent?.is_bvn_verified,
-    isNinVerified: parent?.is_nin_verified,
-    userId: parent?.user_id
+	reference: parent?.reference,
+    amount: parent?.amount,
+    type: parent?.type,
+    amountCurrency: parent?.amount_currency,
+    moneyFrom: parent?.money_from ? parent?.money_from : 'N/A',
+    moneyTo: parent?.money_to ? parent?.money_to : 'N/A',
+    description: parent?.description ? parent?.description : 'N/A',
+    reason: parent?.reason ? parent?.reason : 'N/A'
   }));
 
   const handleRequestSort = (event, property) => {
@@ -106,18 +105,18 @@ export default function ParentsList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = transactions.map((n) => n.reference);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (reference) => {
+    const selectedIndex = selected.indexOf(reference);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, reference);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -138,43 +137,26 @@ export default function ParentsList() {
   };
 
   const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
+    setFilterRefNo(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - parentsList?.data?.total) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - transactionsList?.data?.total) : 0;
 
-  const _parentsList = parentsList?.data ? users : []
-  const filteredUsers = applySortFilter(_parentsList, getComparator(order, orderBy), filterName);
-  const isUserNotFound = !filteredUsers.length;
-
-  const getKycTierStatus = (status) => {
-    let value = 'No';
-    switch (status) {
-      case 1:
-        value = 'Tier 1'
-        return value
-      case 2:
-        value = 'Tier 2'
-        return value
-      default:
-          return value;
-    }
-  }
+  const _transactionsList = transactionsList?.data ? transactions : []
+  const filteredTransactions = applySortFilter(_transactionsList, getComparator(order, orderBy), filterRefNo);
+  const isTransactionNotFound = !filteredTransactions.length;
 
   return (
-    <Page title="User">
+    <Page title="Transactions">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            Transactions
           </Typography>
-          {/* <Button variant="contained" component={RouterLink} to="#" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
-          </Button> */}
         </Stack>
 
         <Card>
-          <UserListToolbar placeholder='Search name...' numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <UserListToolbar placeholder='Search reference...' numSelected={selected.length} filterName={filterRefNo} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -183,12 +165,12 @@ export default function ParentsList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={parentsList?.data?.total}
+                  rowCount={transactionsList?.data?.total}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-                {parentsList.length === 0 ? (
+                {transactionsList.length === 0 ? (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -202,12 +184,12 @@ export default function ParentsList() {
                   </TableBody>
                 ) : (
                   <TableBody>
-                    {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    {filteredTransactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                       const { 
-                        id, name, gender, 
-                        isBvnVerified, isNinVerified, 
-                        kycTier, userId, email } = row; // eslint-disable-line
-                      const isItemSelected = selected.indexOf(name) !== -1;
+                        id, reference, amount, type, 
+                        amountCurrency, moneyFrom, moneyTo, 
+                        description, reason } = row;
+                      const isItemSelected = selected.indexOf(reference) !== -1;
 
                       return (
                         <TableRow
@@ -219,34 +201,22 @@ export default function ParentsList() {
                           aria-checked={isItemSelected}
                         >
                           <TableCell padding="checkbox">
-                            <Checkbox checked={isItemSelected} onChange={() => handleClick(name)} />
+                            <Checkbox checked={isItemSelected} onChange={() => handleClick(reference)} />
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              {/* <Avatar alt={name} src={profileImage} /> */}
                               <Typography variant="subtitle2" noWrap>
-                                {name}
+                                {reference}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{email}</TableCell>
-                          <TableCell align="left">{gender}</TableCell>
-                          <TableCell align="left">{getKycTierStatus(kycTier)}
-                          </TableCell>
-                          <TableCell align="left">
-                            <Label variant="ghost" color={(!isBvnVerified && 'error') || 'success'}>
-                              {sentenceCase((!isBvnVerified && 'non-verified') || 'verified')}
-                            </Label>
-                          </TableCell>
-                          <TableCell align="left">
-                            <Label variant="ghost" color={(!isNinVerified && 'error') || 'success'}>
-                              {sentenceCase((!isNinVerified && 'non-verified') || 'verified')}
-                            </Label>
-                          </TableCell>
-
-                          <TableCell align="right">
-                            <ParentMoreMenu user={row} />
-                          </TableCell>
+                          <TableCell align="left">{fCurrency(amount)}</TableCell>
+                          <TableCell align="left">{type}</TableCell>
+                          <TableCell align="left">{amountCurrency}</TableCell>
+						  <TableCell align="left">{moneyFrom}</TableCell>
+						  <TableCell align="left">{moneyTo}</TableCell>
+						  <TableCell align="left">{description}</TableCell>
+						  <TableCell align="left">{reason}</TableCell>
                         </TableRow>
                       );
                     })}
@@ -258,11 +228,11 @@ export default function ParentsList() {
                   </TableBody>
                 )}
 
-                {isUserNotFound && !isLoading && (
+                {isTransactionNotFound && !isLoading && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
+                        <SearchNotFound searchQuery={filterRefNo} />
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -274,7 +244,7 @@ export default function ParentsList() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25  ]}
             component="div"
-            count={parentsList?.data ? parentsList?.data?.total : 0}
+            count={transactionsList?.data ? transactionsList?.data?.total : 0}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

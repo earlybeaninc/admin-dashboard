@@ -21,7 +21,7 @@ import {
 import Page from '../../../components/Page';
 import Scrollbar from '../../../components/Scrollbar';
 import SearchNotFound from '../../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../sections/@dashboard/user';
+import { UserListHead, UserListToolbar } from '../../../sections/@dashboard/user';
 import { useUsers } from '../../../hooks';
 
 // ----------------------------------------------------------------------
@@ -32,7 +32,7 @@ const TABLE_HEAD = [
   { id: 'gender', label: 'Gender', alignRight: false },
   { id: 'dob', label: 'Date of Birth', alignRight: false },
   { id: 'phone', label: 'Phone', alignRight: false },
-  { id: '' },
+  // { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -154,7 +154,7 @@ export default function KidsList() {
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <UserListToolbar placeholder='Search name...' numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -168,7 +168,7 @@ export default function KidsList() {
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-                {kidsList.length === 0 && isLoading ? (
+                {kidsList.length === 0 ? (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -210,9 +210,9 @@ export default function KidsList() {
                           <TableCell align="left">{gender}</TableCell>
                           <TableCell align="left">{dob}</TableCell>
                           <TableCell align="left">{phone}</TableCell>
-                          <TableCell align="right">
-                            <UserMoreMenu />
-                          </TableCell>
+                          {/* <TableCell align="right">
+                            <KidsMoreMenu />
+                          </TableCell> */}
                         </TableRow>
                       );
                     })}

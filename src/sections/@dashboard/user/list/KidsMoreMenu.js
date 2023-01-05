@@ -1,23 +1,37 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-
-// import PropTypes from 'prop-types';
 
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
 // import * as ROUTES from '../../../../constants/routes'
 // component
 import Iconify from '../../../../components/Iconify';
+import { setLoading, setRequestStatus } from '../../../../redux/actions/miscActions';
 
 // ----------------------------------------------------------------------
-// UserMoreMenu.propTypes = {
-//   user: PropTypes.object
-// };
 
-export default function UserMoreMenu() {
+export default function KidsMoreMenu() {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
+
+  const { requestStatus, isLoading } = useSelector((state) => ({
+    requestStatus: state.app.requestStatus,
+    isLoading: state.app.loading
+  }));
+
+  useEffect(() => {
+    dispatch(setLoading(false));
+    dispatch(setRequestStatus(null));
+    if (requestStatus?.message && !isLoading) {
+      enqueueSnackbar(requestStatus.message, { variant: requestStatus.status })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestStatus, isLoading]);
 
   return (
     <>
@@ -35,16 +49,6 @@ export default function UserMoreMenu() {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem sx={{ color: 'text.secondary' }}
-          component={RouterLink} 
-          to="#"
-        >
-          <ListItemIcon>
-            <Iconify icon="mdi:account-cog-outline" width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="KYC Upgrade" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
-
         <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Iconify icon="eva:edit-fill" width={24} height={24} />

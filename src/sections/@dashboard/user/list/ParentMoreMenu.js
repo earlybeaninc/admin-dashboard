@@ -45,7 +45,7 @@ export default function UserMoreMenu({ user }) {
           <ListItemText primary="KYC Upgrade" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        {user.kycTier && (
+        {user.kycTier === 1 && (
           <MenuItem sx={{ color: 'text.secondary' }}
             component={RouterLink} 
             to={`${ROUTES.PATH_ADMIN.users.root}/${user.id}/kyc-upgrade-2`}
@@ -57,11 +57,21 @@ export default function UserMoreMenu({ user }) {
           </MenuItem>
         )}
 
-        <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
+        {/* <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Iconify icon="eva:edit-fill" width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem> */}
+
+        <MenuItem sx={{ color: 'text.secondary' }}
+          component={RouterLink} 
+          to={`${ROUTES.PATH_ADMIN.wallet.root}/child/${user.id}/create`}
+        >
+          <ListItemIcon>
+            <Iconify icon="ion:wallet-outline" width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary="Create Kid's Wallet" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
     </>
