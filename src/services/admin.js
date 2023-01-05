@@ -48,6 +48,9 @@ export function upgradeKycTier2(data, kwargs) {
 }
 
 /** Wallet endpoints */
+export function creditWallet(data, kwargs) {
+	return REQUEST_METHOD.post(`${ADMIN_WALLET_ROUTE}/credit`, data, kwargs)
+}
 export function createChildWallet(data, kwargs) {
 	return REQUEST_METHOD.post(`${ADMIN_WALLET_ROUTE}/children`, data, kwargs)
 }

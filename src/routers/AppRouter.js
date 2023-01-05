@@ -9,6 +9,7 @@ import { createBrowserHistory } from 'history';
 
 import { 
 	CreateChildWallet,
+	CreditWallet,
 	DashboardApp, KidsList, KycUpgrade, KycUpgrade2, 
 	Login,Page404, ParentsList, Register,
 	TransactionsList, VerifyCode, WalletsList
@@ -122,6 +123,15 @@ const AppRouter = () => (
 						<AdminRoute 
 							component={WalletsList} 
 							path={ROUTES.PATH_ADMIN.wallet.root} 
+						/>
+					}
+				/>
+				<Route
+					path={ROUTES.PATH_ADMIN.wallet.credit}
+					element={
+						<AdminRoute 
+							component={CreditWallet} 
+							path={ROUTES.PATH_ADMIN.wallet.credit} 
 						/>
 					}
 				/>

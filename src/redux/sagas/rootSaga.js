@@ -24,6 +24,7 @@ function* rootSaga() {
   yield takeLatest([
     ACTION.UPGRADE_KYC_TIER_1,
     ACTION.UPGRADE_KYC_TIER_2,
+    ACTION.CREDIT_WALLET,
     ACTION.CREATE_CHILD_WALLET
   ], userSaga);
   yield takeLatest([

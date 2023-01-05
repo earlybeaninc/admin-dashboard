@@ -6,3 +6,4 @@ export { default as ParentMoreMenu } from './list/ParentMoreMenu';
 export { default as UserListHead } from './list/UserListHead';
 export { default as UserListToolbar } from './list/UserListToolbar';
 export { default as KidsMoreMenu } from './list/KidsMoreMenu';
+export { default as WalletMoreMenu } from './list/WalletMoreMenu';

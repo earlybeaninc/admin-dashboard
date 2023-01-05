@@ -228,7 +228,7 @@ export default function TransactionsList() {
                   </TableBody>
                 )}
 
-                {isTransactionNotFound && !isLoading && (
+                {isTransactionNotFound && !isLoading && emptyRows > 0 &&(
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>

@@ -224,7 +224,7 @@ export default function KidsList() {
                   </TableBody>
                 )}
 
-                {isUserNotFound && !isLoading && (
+                {isUserNotFound && !isLoading && emptyRows > 0 && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>

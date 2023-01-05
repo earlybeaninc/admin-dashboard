@@ -28,8 +28,8 @@ export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 export const GET_USER = 'GET_USER';
 export const UPGRADE_KYC_TIER_1 = 'UPGRADE_KYC_TIER_1';
 export const UPGRADE_KYC_TIER_2 = 'UPGRADE_KYC_TIER_2';
+export const CREDIT_WALLET = 'CREDIT_WALLET';
 export const CREATE_CHILD_WALLET = 'CREATE_CHILD_WALLET';
-export const CREATE_CHILD_WALLET_BY_CHILD_ID = 'CREATE_CHILD_WALLET_BY_CHILD_ID';
 
 export const EMAIL_VERIFICATION_SUCCESS_MESSAGE = 'Email verification successful. Redirecting...';
 

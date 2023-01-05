@@ -23,7 +23,7 @@ import Page from '../../../components/Page';
 import Label from '../../../components/Label';
 import Scrollbar from '../../../components/Scrollbar';
 import SearchNotFound from '../../../components/SearchNotFound';
-import { UserListHead, UserListToolbar } from '../../../sections/@dashboard/user';
+import { UserListHead, UserListToolbar, WalletMoreMenu } from '../../../sections/@dashboard/user';
 import { useWallets } from '../../../hooks';
 import { fCurrency } from '../../../utils/formatNumber';
 
@@ -39,6 +39,7 @@ const TABLE_HEAD = [
 	{ id: 'currency', label: 'Currency', alignRight: false },
 	{ id: 'walletType', label: 'Type', alignRight: false },
 	{ id: 'status', label: 'Status', alignRight: false },
+  { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -225,6 +226,9 @@ export default function WalletsList() {
                             <Label variant="ghost" color={(status !== 'active' && 'error') || 'success'}>
                               {sentenceCase((status !== 'active' && 'non-active') || 'active')}
                             </Label>
+                          </TableCell>
+                          <TableCell align="right">
+                            <WalletMoreMenu walletId={id} />
                           </TableCell>
                         </TableRow>
                       );

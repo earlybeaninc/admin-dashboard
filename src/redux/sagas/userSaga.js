@@ -1,6 +1,9 @@
 import { call, put } from 'redux-saga/effects';
 
-import {CREATE_CHILD_WALLET, UPGRADE_KYC_TIER_1, UPGRADE_KYC_TIER_2 } from '../../constants/constants';
+import { 
+	CREATE_CHILD_WALLET, CREDIT_WALLET, UPGRADE_KYC_TIER_1, 
+	UPGRADE_KYC_TIER_2 
+} from '../../constants/constants';
 import { setLoading, setRequestStatus } from '../actions/miscActions';
 import { ADMIN_API } from '../../services';
 
@@ -111,7 +114,35 @@ function* userSaga({type, payload}) {
 					const res = yield call(ADMIN_API.createChildWallet, update, {token: authToken.token});
 					yield put(setRequestStatus({
 						success: true,
-						type: 'user',
+						type: 'wallet',
+						isError: false,
+						message: res.message
+					}));
+				}
+				yield put(setLoading(false));
+
+			} catch (e) {
+				console.log(e);
+				yield handleError(e);
+			}
+			break;
+		}
+
+		case CREDIT_WALLET: {
+			try {
+				yield initRequest();
+		
+				const authToken = JSON.parse(localStorage.getItem('authToken'));
+				if (authToken) {
+					const update = {
+						wallet_id: payload.walletId,
+						amount: payload.amount,
+						narration: payload.narration
+					};
+					const res = yield call(ADMIN_API.creditWallet, update, {token: authToken.token});
+					yield put(setRequestStatus({
+						success: true,
+						type: 'wallet',
 						isError: false,
 						message: res.message
 					}));

@@ -13,6 +13,7 @@ export { default as KidsList} from './users/KidsList';
 export { default as TransactionsList} from './transactions/TransactionsList';
 
 export { default as WalletsList} from './wallet/WalletsList';
+export { default as CreditWallet} from './wallet/CreditWallet';
 export { default as CreateChildWallet} from './wallet/CreateChildWallet';
 
 export { default as Products } from './Products';
