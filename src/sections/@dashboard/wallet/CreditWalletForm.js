@@ -22,7 +22,7 @@ import {
 } from '../../../components/hook-form';
 
 import { CreditWallet } from '../../../redux/actions/userActions';
-import { setLoading, setRequestStatus } from '../../../redux/actions/miscActions';
+import { setRequestStatus } from '../../../redux/actions/miscActions';
 
 // ----------------------------------------------------------------------
 
@@ -64,7 +64,6 @@ export default function CreditWalletForm({ currentUser }) {
   }));
 
   useEffect(() => {
-    dispatch(setLoading(false));
     dispatch(setRequestStatus(null));
     if (requestStatus?.message && !isLoading) {
       enqueueSnackbar(requestStatus.message, { variant: requestStatus.status })
@@ -74,6 +73,7 @@ export default function CreditWalletForm({ currentUser }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestStatus, isLoading]);
+  console.log(isLoading)
 
   const onSubmit = (form) => {
       dispatch(CreditWallet({

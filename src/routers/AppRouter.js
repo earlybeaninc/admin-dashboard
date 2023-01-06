@@ -12,7 +12,8 @@ import {
 	CreditWallet,
 	DashboardApp, KidsList, KycUpgrade, KycUpgrade2, 
 	Login,Page404, ParentsList, Register,
-	TransactionsList, VerifyCode, WalletsList
+	TransactionsList, VerifyCode, ViewWallet, 
+	WalletsList
 }  from '../pages';
 
 import * as ROUTES from '../constants/routes';
@@ -132,6 +133,15 @@ const AppRouter = () => (
 						<AdminRoute 
 							component={CreditWallet} 
 							path={ROUTES.PATH_ADMIN.wallet.credit} 
+						/>
+					}
+				/>
+				<Route
+					path={ROUTES.PATH_ADMIN.wallet.view}
+					element={
+						<AdminRoute 
+							component={ViewWallet} 
+							path={ROUTES.PATH_ADMIN.wallet.view} 
 						/>
 					}
 				/>

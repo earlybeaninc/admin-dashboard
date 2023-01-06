@@ -15,6 +15,7 @@ export { default as TransactionsList} from './transactions/TransactionsList';
 export { default as WalletsList} from './wallet/WalletsList';
 export { default as CreditWallet} from './wallet/CreditWallet';
 export { default as CreateChildWallet} from './wallet/CreateChildWallet';
+export { default as ViewWallet} from './wallet/ViewWallet';
 
 export { default as Products } from './Products';
 export { default as Blog } from './Blog';

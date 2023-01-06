@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { sentenceCase } from 'change-case';
 // material
@@ -9,6 +10,7 @@ import {
   // Avatar,
   // Button,
   Checkbox,
+  Link,
   TableRow,
   TableBody,
   TableCell,
@@ -18,6 +20,9 @@ import {
   TablePagination,
   Paper,
 } from '@mui/material';
+
+import * as ROUTES from '../../../constants/routes';
+
 // components
 import Page from '../../../components/Page';
 import Label from '../../../components/Label';
@@ -210,9 +215,13 @@ export default function WalletsList() {
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
+                            <Link to={`${ROUTES.PATH_ADMIN.wallet.root}/${id}`} 
+                              color="inherit" underline="hover" 
+                              component={RouterLink}>
                               <Typography variant="subtitle2" noWrap>
                                 {name}
                               </Typography>
+                            </Link>
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{parentId}</TableCell>
