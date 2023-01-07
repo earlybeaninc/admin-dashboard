@@ -39,7 +39,7 @@ export const PATH_ADMIN = {
 	},
 	wallet: {
 		root: path(ADMIN_DASHBOARD, 'wallet'),
-		createChildWallet: path(ADMIN_DASHBOARD, 'wallets/child/:parentProfileId/create'),
+		createChildWallet: path(ADMIN_DASHBOARD, 'wallet/child/:parentProfileId/create'),
 		credit: path(ADMIN_DASHBOARD, 'wallet/:id/credit'),
 		view: path(ADMIN_DASHBOARD, 'wallet/:id'),
 	}
