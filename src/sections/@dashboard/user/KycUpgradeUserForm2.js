@@ -25,7 +25,7 @@ import {
 } from '../../../components/hook-form';
 
 import { UpgardeKycTeir2 } from '../../../redux/actions/userActions';
-import { setLoading, setRequestStatus } from '../../../redux/actions/miscActions';
+import { setRequestStatus } from '../../../redux/actions/miscActions';
 
 // ----------------------------------------------------------------------
 
@@ -76,7 +76,6 @@ export default function KycUpgradeUserForm2({ currentUser }) {
   }));
 
   useEffect(() => {
-    dispatch(setLoading(false));
     dispatch(setRequestStatus(null));
     if (requestStatus?.message && !isLoading) {
       enqueueSnackbar(requestStatus.message, { variant: requestStatus.status })
@@ -98,15 +97,14 @@ export default function KycUpgradeUserForm2({ currentUser }) {
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
-      const file = acceptedFiles[0];
+      const img = acceptedFiles[0];
+      const reader = new FileReader();
 
-      if (file) {
-        setValue(
-          'idImage',
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        );
+      if (img) {
+        reader.addEventListener('load', (e) => {
+          setValue('idImage', e.target.result);
+        });
+        reader.readAsDataURL(img);
       }
     },
     [setValue]
@@ -120,7 +118,7 @@ export default function KycUpgradeUserForm2({ currentUser }) {
             <Box sx={{ mb: 5 }}>
               <RHFUploadAvatar
                 name="idImage"
-                accept="image/*"
+                accept="image/x-png,image/jpeg"
                 maxSize={3145728}
                 onDrop={handleDrop}
                 helperText={
@@ -134,7 +132,7 @@ export default function KycUpgradeUserForm2({ currentUser }) {
                       color: 'text.secondary',
                     }}
                   >
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
+                    Allowed *.jpeg, *.jpg, *.png
                     <br /> max size of {fData(3145728)}
                   </Typography>
                 }

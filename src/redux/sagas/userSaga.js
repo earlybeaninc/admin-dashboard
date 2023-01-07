@@ -27,18 +27,19 @@ function* userSaga({type, payload}) {
 		
 				const authToken = JSON.parse(localStorage.getItem('authToken'));
 				if (authToken) {
-					const update = {
-						place_of_birth: payload.place_of_birth,
-						bvn: payload.bvn,
-						email: payload.email,
-						address: payload.address,
-						dob: payload.dob,
-						gender: payload.gender,
-						country: payload.country,
-						image: payload.image,
-						user_id: payload.user_id
-					};
-					const res = yield call(ADMIN_API.upgradeKycTier1, update, {token: authToken.token});
+					// const update = {
+					// 	place_of_birth: payload.place_of_birth,
+					// 	bvn: payload.bvn,
+					// 	email: payload.email,
+					// 	address: payload.address,
+					// 	dob: payload.dob,
+					// 	gender: payload.gender,
+					// 	country: payload.country,
+					// 	image: payload.image,
+					// 	user_id: payload.user_id
+					// };
+					// console.log(update.image)
+					const res = yield call(ADMIN_API.upgradeKycTier1, payload, {token: authToken.token});
 					yield put(setRequestStatus({
 						success: true,
 						type: 'user',

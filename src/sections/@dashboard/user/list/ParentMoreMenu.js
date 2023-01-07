@@ -45,7 +45,7 @@ export default function UserMoreMenu({ user }) {
           <ListItemText primary="KYC Upgrade" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        {user.kycTier === 1 && (
+        {user.kycTier !== 0 && (
           <MenuItem sx={{ color: 'text.secondary' }}
             component={RouterLink} 
             to={`${ROUTES.PATH_ADMIN.users.root}/${user.id}/kyc-upgrade-2`}

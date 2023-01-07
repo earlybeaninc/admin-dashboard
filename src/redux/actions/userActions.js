@@ -9,9 +9,9 @@ export const getUser = (uId) => ({
   payload: uId
 });
 
-export const UpgardeKycTeir1 = (updates) => ({
+export const UpgardeKycTeir1 = (_payload) => ({
   type: UPGRADE_KYC_TIER_1,
-  payload: updates
+  payload: _payload
 });
 
 export const UpgardeKycTeir2 = (updates) => ({

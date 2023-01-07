@@ -55,7 +55,7 @@ export function RHFUploadSingleFile({ name, ...other }) {
 
         return (
           <UploadSingleFile
-            accept="image/*"
+            accept="image/x-png,image/jpeg"
             file={field.value}
             error={checkError}
             helperText={
